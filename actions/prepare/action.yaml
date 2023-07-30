@@ -9,3 +9,5 @@ runs:
       with:
         cache: false
         go-version-file: go.mod
+    - run: task init
+      shell: bash

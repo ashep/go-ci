@@ -1,0 +1,10 @@
+name: Build
+description: Builds a Go application
+inputs:
+  app-name:
+runs:
+  using: composite
+  steps:
+    - uses: ashep/go-ci-github/actions/prepare@v1
+    - run: task build
+      shell: bash
