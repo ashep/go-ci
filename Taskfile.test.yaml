@@ -5,7 +5,7 @@ vars:
     sh: basename $(pwd)
 
 tasks:
-  all:
+  default:
     desc: Run all tests
     cmds:
       - task: test.unit

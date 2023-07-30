@@ -7,6 +7,16 @@ vars:
   APP_VERSION: unknown
 
 tasks:
-  image:
+  build:
     cmds:
       - docker build --build-arg ARCH={{.ARCH}} --build-arg APP_NAME={{.APP_NAME}} --build-arg APP_VERSION={{.APP_VERSION}} -t {{.APP_NAME}}:{{.APP_VERSION}} -f .ci/Dockerfile .
+
+  login:
+    cmds:
+      - echo "Not implemented yet"
+      - exit 1
+
+  push:
+    cmds:
+      - echo "Not implemented yet"
+      - exit 1

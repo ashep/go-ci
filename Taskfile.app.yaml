@@ -5,6 +5,10 @@ vars:
     sh: basename $(pwd)
 
 tasks:
+  default:
+    cmds:
+      - task: run
+
   run:
     desc: Run the application
     cmds:
