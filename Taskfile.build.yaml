@@ -9,4 +9,4 @@ vars:
 tasks:
   image:
     cmds:
-      - docker build --build-arg ARCH={{.ARCH}} --build-arg APP_NAME={{.APP_NAME}} --build-arg APP_VERSION={{.APP_VERSION}} -t {{.APP_NAME}}:{{.APP_VERSION}} -f ./ci/Dockerfile .
+      - docker build --build-arg ARCH={{.ARCH}} --build-arg APP_NAME={{.APP_NAME}} --build-arg APP_VERSION={{.APP_VERSION}} -t {{.APP_NAME}}:{{.APP_VERSION}} -f .ci/Dockerfile .
