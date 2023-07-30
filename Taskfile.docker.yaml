@@ -1,22 +1,29 @@
 version: '3'
 
 vars:
-  ARCH: x86_64
+  ARCH:
+    sh: uname -m
   APP_NAME:
     sh: basename $(pwd)
-  APP_VERSION: unknown
+  APP_VERSION:
+    sh: git rev-parse --abbrev-ref HEAD
 
 tasks:
   build:
+    requires:
+      vars:
+        - ARCH
+        - APP_NAME
+        - APP_VERSION
     cmds:
       - docker build --build-arg ARCH={{.ARCH}} --build-arg APP_NAME={{.APP_NAME}} --build-arg APP_VERSION={{.APP_VERSION}} -t {{.APP_NAME}}:{{.APP_VERSION}} -f .ci/Dockerfile .
 
-  login:
-    cmds:
-      - echo "Not implemented yet"
-      - exit 1
-
   push:
+    requires:
+      vars:
+        - REGISTRY_USER
+        - REGISTRY_REPO
+        - APP_VERSION
     cmds:
-      - echo "Not implemented yet"
-      - exit 1
+      - docker tag {{.APP_NAME}}:{{.APP_VERSION}} {{.REGISTRY_USER}}/{{.REGISTRY_REPO}}:{{.APP_VERSION}}
+      - docker push {{.REGISTRY_USER}}/{{.REGISTRY_REPO}}:{{.APP_VERSION}}
