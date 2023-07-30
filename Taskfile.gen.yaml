@@ -6,7 +6,7 @@ vars:
 
 tasks:
   all:
-    desc: Run code generation
+    desc: Run all code generation tools
     cmds:
       - task: gen.proto
 
