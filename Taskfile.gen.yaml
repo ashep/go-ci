@@ -8,7 +8,7 @@ tasks:
   all:
     desc: Run all code generation tools
     cmds:
-      - task: gen.proto
+      - task: proto
 
   proto:
     desc: Generate protobuf code
