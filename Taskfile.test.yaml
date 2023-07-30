@@ -10,7 +10,7 @@ tasks:
     cmds:
       - task: test.unit
 
-  test.unit:
+  unit:
     desc: Run unit tests
     vars:
       GOTEST:
@@ -18,7 +18,7 @@ tasks:
     cmds:
       - '{{.GOTEST}} -v -mod=vendor -race {{default "./..." .CLI_ARGS}}'
 
-  test.func:
+  func:
     desc: Run functional tests
     vars:
       GOTEST:
@@ -27,13 +27,13 @@ tasks:
       - docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml up --remove-orphans -d
       - docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml run --rm --remove-orphans tests go test -v -mod=vendor -tags=functest ./tests/...
 
-  test.func.manual:
-    desc: Interactively attach to functional tests container
+  func:manual:
+    desc: Attach to functional tests container
     cmds:
       - docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml up --remove-orphans -d
       - docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml run --rm -i tests sh
 
-  test.func.clean:
+  clean:
     desc: Cleanup test environment
     cmds:
       - docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml down --remove-orphans
