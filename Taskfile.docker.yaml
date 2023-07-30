@@ -1,29 +1,17 @@
 version: '3'
 
-vars:
-  ARCH:
-    sh: uname -m
-  APP_NAME:
-    sh: basename $(pwd)
-  APP_VERSION:
-    sh: git rev-parse --abbrev-ref HEAD
-
 tasks:
   build:
-    requires:
-      vars:
-        - ARCH
-        - APP_NAME
-        - APP_VERSION
     cmds:
+      - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
+      - if [ -z "{{.APP_VERSION}}" ]; then echo "APP_VERSION var is not set"; exit 1; fi
+      - if [ -z "{{.ARCH}}" ]; then echo "ARCH var is not set"; exit 1; fi
       - docker build --build-arg ARCH={{.ARCH}} --build-arg APP_NAME={{.APP_NAME}} --build-arg APP_VERSION={{.APP_VERSION}} -t {{.APP_NAME}}:{{.APP_VERSION}} -f .ci/Dockerfile .
 
   push:
-    requires:
-      vars:
-        - REGISTRY_USER
-        - REGISTRY_REPO
-        - APP_VERSION
     cmds:
-      - docker tag {{.APP_NAME}}:{{.APP_VERSION}} {{.REGISTRY_USER}}/{{.REGISTRY_REPO}}:{{.APP_VERSION}}
-      - docker push {{.REGISTRY_USER}}/{{.REGISTRY_REPO}}:{{.APP_VERSION}}
+      - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
+      - if [ -z "{{.APP_VERSION}}" ]; then echo "APP_VERSION var is not set"; exit 1; fi
+      - if [ -z "{{.REGISTRY_REPO}}" ]; then echo "REGISTRY_REPO var is not set"; exit 1; fi
+      - docker tag {{.APP_NAME}}:{{.APP_VERSION}} {{.REGISTRY_REPO}}:{{.APP_VERSION}}
+      - docker push {{.REGISTRY_REPO}}:{{.APP_VERSION}}

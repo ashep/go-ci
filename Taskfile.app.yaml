@@ -1,9 +1,5 @@
 version: "3"
 
-vars:
-  APP_NAME:
-    sh: basename $(pwd)
-
 tasks:
   default:
     cmds:
