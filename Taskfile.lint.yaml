@@ -1,0 +1,16 @@
+version: '3'
+
+vars:
+  APP_NAME:
+    sh: basename $(pwd)
+
+tasks:
+  all:
+    desc: Run all linters
+    cmds:
+      - task: lint.golangci
+
+  golangci:
+    desc: Run 'golangci-lint' linter
+    cmds:
+      - golangci-lint run ./...

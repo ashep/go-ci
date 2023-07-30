@@ -1,0 +1,21 @@
+version: "3"
+
+vars:
+  APP_NAME:
+    sh: basename $(pwd)
+
+tasks:
+  run:
+    desc: Run the application
+    cmds:
+      - go run -race main.go {{.CLI_ARGS}}
+
+  migrate-up:
+    desc: Apply db migrations
+    cmds:
+      - go run main.go --migrate-up {{.CLI_ARGS}}
+
+  migrate-down:
+    desc: Revert db migrations
+    cmds:
+      - go run main.go --migrate-down {{.CLI_ARGS}}

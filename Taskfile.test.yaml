@@ -1,48 +1,11 @@
-version: "3"
+version: '3'
 
 vars:
   APP_NAME:
     sh: basename $(pwd)
 
 tasks:
-  run:
-    desc: Run the application
-    cmds:
-      - go run -race main.go {{.CLI_ARGS}}
-
-  migrate-up:
-    desc: Apply db migrations
-    cmds:
-      - go run main.go --migrate-up {{.CLI_ARGS}}
-
-  migrate-down:
-    desc: Revert db migrations
-    cmds:
-      - go run main.go --migrate-down {{.CLI_ARGS}}
-
-  gen:
-    desc: Run code generation
-    cmds:
-      - task: gen.proto
-
-  gen.proto:
-    desc: Generate protobuf code
-    cmds:
-      - rm -rvf ./sdk/proto
-      - buf lint proto
-      - buf generate
-
-  lint:
-    desc: Run all linters
-    cmds:
-      - task: lint.golangci
-
-  lint.golangci:
-    desc: Run 'golangci-lint' linter
-    cmds:
-      - golangci-lint run ./...
-
-  test:
+  all:
     desc: Run all tests
     cmds:
       - task: test.unit
@@ -75,8 +38,3 @@ tasks:
     cmds:
       - docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml down --remove-orphans
       - docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml down -v
-
-  clean:
-    desc: Cleanup
-    cmds:
-      - task: test.func.clean
