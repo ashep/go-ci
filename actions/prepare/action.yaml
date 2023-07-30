@@ -9,6 +9,8 @@ runs:
       with:
         cache: false
         go-version-file: go.mod
+    - run: echo $PATH
+      shell: sh
     - run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /bin v1.53.3
       shell: sh
     - run: task init
