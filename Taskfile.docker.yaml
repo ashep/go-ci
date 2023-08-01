@@ -2,6 +2,7 @@ version: '3'
 
 tasks:
   build:
+    desc: Build a docker image
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
       - if [ -z "{{.APP_VERSION}}" ]; then echo "APP_VERSION var is not set"; exit 1; fi
@@ -9,6 +10,7 @@ tasks:
       - docker build --build-arg ARCH={{.ARCH}} --build-arg APP_NAME={{.APP_NAME}} --build-arg APP_VERSION={{.APP_VERSION}} -t {{.APP_NAME}}:{{.APP_VERSION}} -f .ci/Dockerfile .
 
   push:
+    desc: Push a docker image
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
       - if [ -z "{{.APP_VERSION}}" ]; then echo "APP_VERSION var is not set"; exit 1; fi

@@ -1,10 +1,19 @@
 name: Build
 description: Builds a Go application
 inputs:
-  app-name:
+  app_name:
+    required: true
+    description: Application name
+  app_version:
+    required: true
+    description: Application version
+
 runs:
   using: composite
   steps:
     - uses: ashep/go-ci-github/actions/prepare@v1
-    - run: task build
+    - run: task docker:build
       shell: bash
+      env:
+        TASK_APP_NAME: ${{ inputs.app_name }}
+        TASK_APP_VERSION: ${{ inputs.app_version }}
