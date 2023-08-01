@@ -1,5 +1,5 @@
 name: Build
-description: Builds a Docker image
+description: Publishes a Docker image
 inputs:
   app_name:
     required: true
@@ -12,17 +12,11 @@ runs:
   using: composite
   steps:
     - uses: ashep/go-ci-github/actions/prepare@main
-    - run: task docker:build
-      shell: bash
-      env:
-        TASK_APP_NAME: ${{ inputs.app_name }}
-        TASK_APP_VERSION: ${{ inputs.app_version }}
-    - run: task docker:save
-      shell: bash
-      env:
-        TASK_APP_NAME: ${{ inputs.app_name }}
-        TASK_APP_VERSION: ${{ inputs.app_version }}
-    - uses: actions/upload-artifact@v3
+    - uses: actions/download-artifact@v3
       with:
         name: tmp
-        path: tmp
+    - run: task docker:push
+      shell: bash
+      env:
+        TASK_APP_NAME: ${{ inputs.app_name }}
+        TASK_APP_VERSION: ${{ inputs.app_version }}
