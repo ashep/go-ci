@@ -11,7 +11,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: ashep/go-ci-github/actions/prepare@v1
+    - uses: ashep/go-ci-github/actions/prepare@main
     - run: task docker:build
       shell: bash
       env:
