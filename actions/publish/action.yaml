@@ -15,8 +15,13 @@ runs:
     - uses: actions/download-artifact@v3
       with:
         name: tmp
+    - run: task docker:load
+      shell: sh
+      env:
+        TASK_APP_NAME: ${{ inputs.app_name }}
+        TASK_APP_VERSION: ${{ inputs.app_version }}
     - run: task docker:push
-      shell: bash
+      shell: sh
       env:
         TASK_APP_NAME: ${{ inputs.app_name }}
         TASK_APP_VERSION: ${{ inputs.app_version }}
