@@ -48,8 +48,8 @@ jobs:
           app_version: dev
 
   publish:
-    if: ${{ inputs.registry_user }} != "" && ${{ secrets.registry_password }}
     runs-on: ubuntu-latest
+    if: ${{ inputs.registry_user }} != "" && ${{ secrets.registry_password }} != ""
     needs:
       - build
     env:
