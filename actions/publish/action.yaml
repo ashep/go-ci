@@ -15,7 +15,7 @@ runs:
     - uses: actions/download-artifact@v3
       with:
         name: app_image
-        path: tmp
+        path: tmp/app_image
     - run: task docker:load
       shell: sh
       env:

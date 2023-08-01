@@ -25,5 +25,5 @@ runs:
     - uses: actions/upload-artifact@v3
       with:
         name: app_image
-        path: tmp/{{ inputs.app_name }}_${{ inputs.app_version }}.tar
+        path: tmp/app_image/
         retention-days: 1

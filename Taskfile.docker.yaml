@@ -23,12 +23,12 @@ tasks:
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
       - if [ -z "{{.APP_VERSION}}" ]; then echo "APP_VERSION var is not set"; exit 1; fi
-      - mkdir -p tmp
-      - docker save -o tmp/{{.APP_NAME}}_{{.APP_VERSION}}.tar {{.APP_NAME}}:{{.APP_VERSION}}
+      - mkdir -p tmp/app-image
+      - docker save -o tmp/app_image/{{.APP_NAME}}_{{.APP_VERSION}}.tar {{.APP_NAME}}:{{.APP_VERSION}}
 
   load:
     desc: Load a Docker image from a file
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
       - if [ -z "{{.APP_VERSION}}" ]; then echo "APP_VERSION var is not set"; exit 1; fi
-      - docker load -i tmp/{{.APP_NAME}}_{{.APP_VERSION}}.tar
+      - docker load -i tmp/app_image/{{.APP_NAME}}_{{.APP_VERSION}}.tar
