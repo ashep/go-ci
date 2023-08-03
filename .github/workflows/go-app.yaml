@@ -62,11 +62,11 @@ jobs:
           app_name: ${{ github.event.repository.name }}
           app_version: dev
 
-  publish:
+  publish-image:
     runs-on: ubuntu-latest
     if: ${{ inputs.registry_user }} != ""
     needs:
-      - build
+      - build-image
     env:
       TASK_APP_NAME: ${{ github.event.repository.name }}
       TASK_APP_VERSION: ${{ github.ref_name }}
