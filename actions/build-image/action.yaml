@@ -14,13 +14,13 @@ runs:
     - run: task docker:build
       shell: sh
       env:
-        TASK_APP_NAME: ${{ inputs.app_name }}
-        TASK_APP_VERSION: ${{ inputs.app_version }}
+        APP_NAME: ${{ inputs.app_name }}
+        APP_VERSION: ${{ inputs.app_version }}
     - run: task docker:save
       shell: sh
       env:
-        TASK_APP_NAME: ${{ inputs.app_name }}
-        TASK_APP_VERSION: ${{ inputs.app_version }}
+        APP_NAME: ${{ inputs.app_name }}
+        APP_VERSION: ${{ inputs.app_version }}
     - uses: actions/upload-artifact@v3
       with:
         name: app_image

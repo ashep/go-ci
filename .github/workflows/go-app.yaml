@@ -67,9 +67,6 @@ jobs:
     if: ${{ inputs.registry_user }} != ""
     needs:
       - build-image
-    env:
-      TASK_APP_NAME: ${{ github.event.repository.name }}
-      TASK_APP_VERSION: ${{ github.ref_name }}
     steps:
       - uses: docker/login-action@v2
         with:
