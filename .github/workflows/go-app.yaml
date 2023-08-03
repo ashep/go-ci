@@ -64,7 +64,7 @@ jobs:
 
   publish-image:
     runs-on: ubuntu-latest
-    if: ${{ inputs.registry_user != '' && secrets.registry_password != '' }}
+    if: ${{ inputs.registry_user != '' }}
     needs:
       - build-image
     steps:
