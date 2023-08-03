@@ -52,7 +52,7 @@ jobs:
       - uses: arduino/setup-task@v1
       - run: task init
       - uses: ashep/go-ci/actions/build-image@main
-        if: github.ref_name == 'main'
+        if: ${{ github.ref_name == 'main' }}
         with:
           app_name: ${{ github.event.repository.name }}
           app_version: latest
@@ -64,7 +64,7 @@ jobs:
 
   publish-image:
     runs-on: ubuntu-latest
-    if: ${{ inputs.registry_user }} != ""
+    if: ${{ inputs.registry_user != "" }}
     needs:
       - build-image
     steps:
