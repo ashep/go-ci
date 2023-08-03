@@ -1,4 +1,4 @@
-name: build-go-app
+name: go-app
 on:
   workflow_call:
     inputs:
@@ -73,12 +73,12 @@ jobs:
     steps:
       - run: docker login -u ${{ inputs.registry_user }} -p ${{ secrets.registry_password }}
       - uses: actions/checkout@v3
-      - uses: ashep/go-ci/actions/publish@main
+      - uses: ashep/go-ci/actions/publish-image@main
         if: ${{ github.ref_name }} == 'main'
         with:
           app_name: ${{ github.event.repository.name }}
           app_version: latest
-      - uses: ashep/go-ci/actions/publish@main
+      - uses: ashep/go-ci/actions/publish-image@main
         if: ${{ github.ref_name }} != 'main'
         with:
           app_name: ${{ github.event.repository.name }}

@@ -1,4 +1,4 @@
-name: Build
+name: Publish image
 description: Publishes a Docker image
 inputs:
   app_name:
