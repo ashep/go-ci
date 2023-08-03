@@ -1,14 +1,8 @@
-name: Prepare
-description: Checks out repo and installs and setups all necessary binaries
+name: Setup Taskfile
+description: Setups Taskfile runner
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v3
-    - uses: arduino/setup-task@v1
-    - uses: actions/setup-go@v4
-      with:
-        cache: false
-        go-version-file: go.mod
     - run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.53.3
       shell: sh
     - run: go mod vendor
