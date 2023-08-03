@@ -14,9 +14,9 @@ tasks:
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
       - if [ -z "{{.APP_VERSION}}" ]; then echo "APP_VERSION var is not set"; exit 1; fi
-      - if [ -z "{{.REGISTRY_REPO}}" ]; then echo "REGISTRY_REPO var is not set"; exit 1; fi
-      - docker tag {{.APP_NAME}}:{{.APP_VERSION}} {{.REGISTRY_REPO}}:{{.APP_VERSION}}
-      - docker push {{.REGISTRY_REPO}}:{{.APP_VERSION}}
+      - if [ -z "{{.REGISTRY_USER}}" ]; then echo "REGISTRY_USER var is not set"; exit 1; fi
+      - docker tag {{.APP_NAME}}:{{.APP_VERSION}} {{.REGISTRY_USER}}/{{.APP_NAME}}:{{.APP_VERSION}}
+      - docker push {{.REGISTRY_USER}}/{{.APP_NAME}}:{{.APP_VERSION}}
 
   save:
     desc: Saves a Docker image to a file

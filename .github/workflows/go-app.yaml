@@ -2,9 +2,15 @@ name: go-app
 on:
   workflow_call:
     inputs:
-      registry_user:
-        required: false
+      app_name:
         type: string
+        required: true
+      app_version:
+        type: string
+        required: true
+      registry_user:
+        type: string
+        required: false
     secrets:
       registry_password:
         required: false
@@ -52,19 +58,13 @@ jobs:
       - uses: arduino/setup-task@v1
       - run: task init
       - uses: ashep/go-ci/actions/build-image@main
-        if: ${{ github.ref_name == 'main' }}
         with:
-          app_name: ${{ github.event.repository.name }}
-          app_version: latest
-      - uses: ashep/go-ci/actions/build-image@main
-        if: github.ref_name != 'main'
-        with:
-          app_name: ${{ github.event.repository.name }}
-          app_version: dev
+          app_name: ${{ inputs.app_name }}
+          app_version: ${{ inputs.app_version }}
 
   publish-image:
     runs-on: ubuntu-latest
-    if: ${{ inputs.registry_user != '' }}
+    if: ${{ inputs.registry_user != '' && secrets.registry_password != '' }}
     needs:
       - build-image
     steps:
@@ -78,10 +78,10 @@ jobs:
       - uses: ashep/go-ci/actions/publish-image@main
         if: github.ref_name == 'main'
         with:
-          app_name: ${{ github.event.repository.name }}
+          app_name: ${{ inputs.app_name }}
           app_version: latest
       - uses: ashep/go-ci/actions/publish-image@main
         if: github.ref_name != 'main'
         with:
-          app_name: ${{ github.event.repository.name }}
+          app_name: ${{ inputs.app_name }}
           app_version: dev
