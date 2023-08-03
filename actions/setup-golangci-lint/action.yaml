@@ -5,7 +5,7 @@ runs:
   steps:
     - run: mkdir -p bin
       shell: sh
-    - run: export PATH=./bin:$PATH
+    - run: echo "$(pwd)/bin" >> $GITHUB_PATH
       shell: sh
     - run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ./bin v1.53.3
       shell: sh
