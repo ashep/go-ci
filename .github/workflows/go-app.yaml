@@ -79,9 +79,18 @@ jobs:
         if: github.ref_name == 'main'
         with:
           app_name: ${{ inputs.app_name }}
-          app_version: latest
+          app_version: ${{ inputs.app_version }}
+          tag_name: latest
       - uses: ashep/go-ci/actions/publish-image@v1
         if: github.ref_name != 'main'
         with:
           app_name: ${{ inputs.app_name }}
-          app_version: dev
+          app_version: ${{ inputs.app_version }}
+          tag_name: dev
+      - uses: ashep/go-ci/actions/publish-image@v1
+        if: github.ref_type == 'tag'
+        with:
+          app_name: ${{ inputs.app_name }}
+          app_version: ${{ inputs.app_version }}
+          tag_name: ${{ github.ref_name }}
+
