@@ -7,6 +7,9 @@ inputs:
   app_version:
     required: true
     description: Application version
+  tag_name:
+    required: true
+    description: Docker tag
 
 runs:
   using: composite
@@ -24,4 +27,4 @@ runs:
       shell: sh
       env:
         APP_NAME: ${{ inputs.app_name }}
-        APP_VERSION: ${{ inputs.app_version }}
+        APP_VERSION: ${{ inputs.tag_name }}

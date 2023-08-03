@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
-      - uses: ashep/go-ci/actions/setup-golangci-lint@main
+      - uses: ashep/go-ci/actions/setup-golangci-lint@v1
       - run: task init
       - run: task lint:golangci
 
@@ -57,7 +57,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
       - run: task init
-      - uses: ashep/go-ci/actions/build-image@main
+      - uses: ashep/go-ci/actions/build-image@v1
         with:
           app_name: ${{ inputs.app_name }}
           app_version: ${{ inputs.app_version }}
@@ -75,12 +75,12 @@ jobs:
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
       - run: task init
-      - uses: ashep/go-ci/actions/publish-image@main
+      - uses: ashep/go-ci/actions/publish-image@v1
         if: github.ref_name == 'main'
         with:
           app_name: ${{ inputs.app_name }}
           app_version: latest
-      - uses: ashep/go-ci/actions/publish-image@main
+      - uses: ashep/go-ci/actions/publish-image@v1
         if: github.ref_name != 'main'
         with:
           app_name: ${{ inputs.app_name }}
