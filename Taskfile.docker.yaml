@@ -20,7 +20,7 @@ tasks:
       - docker push {{.REGISTRY_USER}}/{{.APP_NAME}}:{{.TAG_NAME}}
 
   save:
-    desc: Saves a Docker image to a file
+    desc: Save a Docker image to a file
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
       - if [ -z "{{.APP_VERSION}}" ]; then echo "APP_VERSION var is not set"; exit 1; fi

@@ -1,21 +1,17 @@
 version: "3"
 
 tasks:
-  default:
-    cmds:
-      - task: run
-
   run:
     desc: Run the application
     cmds:
       - go run -race main.go {{.CLI_ARGS}}
 
   migrate-up:
-    desc: Apply db migrations
+    desc: Apply DB migrations
     cmds:
       - go run main.go --migrate-up {{.CLI_ARGS}}
 
   migrate-down:
-    desc: Revert db migrations
+    desc: Revert DB migrations
     cmds:
       - go run main.go --migrate-down {{.CLI_ARGS}}
