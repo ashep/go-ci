@@ -62,7 +62,7 @@ jobs:
           app_name: ${{ inputs.app_name }}
           app_version: ${{ inputs.app_version }}
 
-  publish-image:
+  push-image:
     runs-on: ubuntu-latest
     if: ${{ inputs.registry_user != '' }}
     needs:
@@ -75,22 +75,24 @@ jobs:
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
       - run: task init
-      - uses: ashep/go-ci/actions/publish-image@v1
+      - uses: ashep/go-ci/actions/push-image@v1
         if: github.ref_name == 'main'
         with:
           app_name: ${{ inputs.app_name }}
           app_version: ${{ inputs.app_version }}
+          registry_user: ${{ inputs.registry_user }}
           tag_name: latest
-      - uses: ashep/go-ci/actions/publish-image@v1
+      - uses: ashep/go-ci/actions/push-image@v1
         if: github.ref_name != 'main'
         with:
           app_name: ${{ inputs.app_name }}
           app_version: ${{ inputs.app_version }}
+          registry_user: ${{ inputs.registry_user }}
           tag_name: dev
-      - uses: ashep/go-ci/actions/publish-image@v1
+      - uses: ashep/go-ci/actions/push-image@v1
         if: github.ref_type == 'tag'
         with:
           app_name: ${{ inputs.app_name }}
           app_version: ${{ inputs.app_version }}
+          registry_user: ${{ inputs.registry_user }}
           tag_name: ${{ github.ref_name }}
-

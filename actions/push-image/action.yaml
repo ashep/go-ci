@@ -7,6 +7,9 @@ inputs:
   app_version:
     required: true
     description: Application version
+  registry_user:
+    required: true
+    description: Registry username
   tag_name:
     required: true
     description: Docker tag
@@ -28,3 +31,5 @@ runs:
       env:
         APP_NAME: ${{ inputs.app_name }}
         APP_VERSION: ${{ inputs.tag_name }}
+        REGISTRY_USER: ${{ inputs.registry_user }}
+        TAG_NAME: ${{ inputs.tag_name }}
