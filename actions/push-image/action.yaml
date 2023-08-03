@@ -30,6 +30,6 @@ runs:
       shell: sh
       env:
         APP_NAME: ${{ inputs.app_name }}
-        APP_VERSION: ${{ inputs.tag_name }}
+        APP_VERSION: ${{ inputs.app_version }}
         REGISTRY_USER: ${{ inputs.registry_user }}
         TAG_NAME: ${{ inputs.tag_name }}
