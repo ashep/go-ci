@@ -71,6 +71,7 @@ jobs:
       TASK_APP_NAME: ${{ github.event.repository.name }}
       TASK_APP_VERSION: ${{ github.ref_name }}
     steps:
+      - run: echo "${{ inputs.registry_user }}"
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
       - uses: docker/login-action@v2
