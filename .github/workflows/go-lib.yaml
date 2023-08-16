@@ -1,0 +1,25 @@
+name: go-app
+on: workflow_call
+jobs:
+  golangci-lint:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v3
+      - uses: arduino/setup-task@v1
+      - uses: ashep/go-ci/actions/setup-golangci-lint@v1
+      - run: task init
+      - run: task lint:golangci
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: arduino/setup-task@v1
+      - uses: actions/setup-go@v4
+        with:
+          cache: false
+          go-version-file: go.mod
+      - run: go mod vendor
+      - run: task init
+      - run: task test:unit
