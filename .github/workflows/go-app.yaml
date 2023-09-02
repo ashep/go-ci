@@ -43,10 +43,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: thebinaryfelix/check-file-existence-action@v1
+        id: docker_compose_exists
+        with:
+          files: 'docker-compose.tests.yaml'
       - uses: arduino/setup-task@v1
+        if: steps.docker_compose_exists.outputs.exists == 'true'
       - run: go mod vendor
+        if: steps.docker_compose_exists.outputs.exists == 'true'
       - run: task init
+        if: steps.docker_compose_exists.outputs.exists == 'true'
       - run: task test:func
+        if: steps.docker_compose_exists.outputs.exists == 'true'
 
   build-image:
     runs-on: ubuntu-latest
