@@ -11,7 +11,7 @@ on:
       registry_user:
         type: string
         required: false
-      run_golanci_lint:
+      run_golangci_lint:
         type: boolean
         default: true
       run_unit_tests:
