@@ -11,6 +11,21 @@ on:
       registry_user:
         type: string
         required: false
+      run_golanci_lint:
+        type: boolean
+        default: true
+      run_unit_tests:
+        type: boolean
+        default: true
+      run_func_tests:
+        type: boolean
+        default: true
+      run_build_image:
+        type: boolean
+        default: true
+      run_push_image:
+        type: boolean
+        default: true
     secrets:
       registry_password:
         required: false
@@ -18,6 +33,7 @@ on:
 jobs:
   golangci-lint:
     runs-on: ubuntu-latest
+    if: ${{ inputs.run_golangci_lint }}
     continue-on-error: true
     steps:
       - uses: actions/checkout@v3
@@ -28,6 +44,7 @@ jobs:
 
   unit-tests:
     runs-on: ubuntu-latest
+    if: ${{ inputs.run_unit_tests }}
     steps:
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
@@ -41,23 +58,17 @@ jobs:
 
   func-tests:
     runs-on: ubuntu-latest
+    if: ${{ inputs.run_func_tests }}
     steps:
       - uses: actions/checkout@v3
-      - uses: thebinaryfelix/check-file-existence-action@1.0.0
-        id: docker_compose_exists
-        with:
-          files: 'docker-compose.tests.yaml'
       - uses: arduino/setup-task@v1
-        if: steps.docker_compose_exists.outputs.exists == 'true'
       - run: go mod vendor
-        if: steps.docker_compose_exists.outputs.exists == 'true'
       - run: task init
-        if: steps.docker_compose_exists.outputs.exists == 'true'
       - run: task test:func
-        if: steps.docker_compose_exists.outputs.exists == 'true'
 
   build-image:
     runs-on: ubuntu-latest
+    if: ${{ inputs.run_build_image }}
     needs:
       - unit-tests
       - func-tests
@@ -72,7 +83,7 @@ jobs:
 
   push-image:
     runs-on: ubuntu-latest
-    if: ${{ inputs.registry_user != '' }}
+    if: ${{ inputs.run_push_image && inputs.registry_user != '' }}
     needs:
       - build-image
     steps:
