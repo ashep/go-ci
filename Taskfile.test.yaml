@@ -21,19 +21,19 @@ tasks:
         sh: which gotest || echo go test
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
-      - docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml up --remove-orphans -d
-      - docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml run --rm --remove-orphans tests go test -v -mod=vendor -tags=functest ./tests/...
+      - if [ -f docker-compose.tests.yaml ] && docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml up --remove-orphans -d
+      - if [ -f docker-compose.tests.yaml ] && docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml run --rm --remove-orphans tests go test -v -mod=vendor -tags=functest ./tests/...
 
   func:manual:
     desc: Attach to functional tests container
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
-      - docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml up --remove-orphans -d
-      - docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml run --rm -i tests sh
+      - if [ -f docker-compose.tests.yaml ] && docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml up --remove-orphans -d
+      - if [ -f docker-compose.tests.yaml ] && docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml run --rm -i tests sh
 
   clean:
     desc: Cleanup test environment
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
-      - docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml down --remove-orphans
-      - docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml down -v
+      - if [ -f docker-compose.tests.yaml ] && docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml down --remove-orphans
+      - if [ -f docker-compose.tests.yaml ] && docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml down -v
