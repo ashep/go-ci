@@ -3,15 +3,24 @@ version: "3"
 tasks:
   run:
     desc: Run the application
+    env:
+      APP_CONFIG_PATH:
+        sh: '[ -f "config.yaml" ] && echo config.yaml'
     cmds:
       - go run -race main.go {{.CLI_ARGS}}
 
   migrate-up:
     desc: Apply DB migrations
+    env:
+      APP_CONFIG_PATH:
+        sh: '[ -f "config.yaml" ] && echo config.yaml'
     cmds:
-      - go run main.go --migrate-up {{.CLI_ARGS}}
+      - go run main.go -migrate-up {{.CLI_ARGS}}
 
   migrate-down:
     desc: Revert DB migrations
+    env:
+      APP_CONFIG_PATH:
+        sh: '[ -f "config.yaml" ] && echo config.yaml'
     cmds:
-      - go run main.go --migrate-down {{.CLI_ARGS}}
+      - go run main.go -migrate-down {{.CLI_ARGS}}
