@@ -23,6 +23,7 @@ runs:
         ssh-add - <<< "${{ inputs.ci_private_key }}"
         echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
     - shell: sh
+      if: ${{ inputs.go_private != '' && inputs.ci_private_key != '' }}
       run: |
         git config --global url."ssh://git@github.com/".insteadOf https://github.com/
-        echo "GOPRIVATE={{ inputs.go_private }}" >> $GITHUB_ENV
+        echo "GOPRIVATE=${{ inputs.go_private }}" >> $GITHUB_ENV
