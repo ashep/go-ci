@@ -122,6 +122,7 @@ jobs:
         with:
           app_name: ${{ inputs.app_name }}
           app_version: ${{ inputs.app_version }}
+          registry_host: ${{ inputs.registry_host }}
           registry_user: ${{ inputs.registry_user }}
           tag_name: latest
       - uses: ashep/go-ci/actions/push-image@v1
@@ -129,6 +130,7 @@ jobs:
         with:
           app_name: ${{ inputs.app_name }}
           app_version: ${{ inputs.app_version }}
+          registry_host: ${{ inputs.registry_host }}
           registry_user: ${{ inputs.registry_user }}
           tag_name: dev
       - uses: ashep/go-ci/actions/push-image@v1
@@ -136,5 +138,6 @@ jobs:
         with:
           app_name: ${{ inputs.app_name }}
           app_version: ${{ inputs.app_version }}
+          registry_host: ${{ inputs.registry_host }}
           registry_user: ${{ inputs.registry_user }}
           tag_name: ${{ github.ref_name }}
