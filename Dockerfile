@@ -7,6 +7,8 @@ ARG APP_VERSION
 WORKDIR /build
 COPY . .
 
+RUN apk add git
+
 RUN mkdir out && \
     go mod vendor && \
     go build -ldflags="-X 'main.buildName=${APP_NAME}' -X 'main.buildVer=${APP_VERSION}'" -o out/app main.go
