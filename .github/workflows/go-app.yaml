@@ -63,10 +63,6 @@ jobs:
         with:
           ci_private_key: ${{ secrets.ci_private_key }}
           go_private: ${{ inputs.go_private }}
-      - run: pwd  # debug
-      - run: ls -ls  # debug
-      - run: ls -l ~  # debug
-      - run: cat ~/.gitconfig  # debug
       - run: go mod vendor
       - run: task init
       - run: task test:unit

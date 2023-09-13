@@ -14,8 +14,6 @@ runs:
   steps:
     - shell: sh
       if: ${{ inputs.go_private != '' && inputs.ci_private_key != '' }}
-      env:
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
         mkdir -p ~/.ssh
         eval $(ssh-agent -s)
