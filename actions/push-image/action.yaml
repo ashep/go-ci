@@ -7,6 +7,9 @@ inputs:
   app_version:
     required: true
     description: Application version
+  registry_host:
+    required: false
+    description: Registry hostname
   registry_user:
     required: true
     description: Registry username
@@ -31,5 +34,6 @@ runs:
       env:
         APP_NAME: ${{ inputs.app_name }}
         APP_VERSION: ${{ inputs.app_version }}
+        REGISTRY_HOST: ${{ inputs.registry_host }}
         REGISTRY_USER: ${{ inputs.registry_user }}
         TAG_NAME: ${{ inputs.tag_name }}
