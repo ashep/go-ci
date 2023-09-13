@@ -12,14 +12,15 @@ tasks:
   push:
     desc: Push a Docker image
     vars:
-      REGISTRY_HOST: '{{default "registry-1.docker.io" .REGISTRY_HOST}}'
+      REGISTRY_USER:
+        sh: if [ ! -z "{{.REGISTRY_HOST}}" ]; then echo "{{.REGISTRY_HOST}}/{{.REGISTRY_USER}}"; else echo "{{.REGISTRY_USER}}";  fi
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
       - if [ -z "{{.APP_VERSION}}" ]; then echo "APP_VERSION var is not set"; exit 1; fi
       - if [ -z "{{.REGISTRY_USER}}" ]; then echo "REGISTRY_USER var is not set"; exit 1; fi
       - if [ -z "{{.TAG_NAME}}" ]; then echo "TAG_NAME var is not set"; exit 1; fi
-      - docker tag {{.APP_NAME}}:{{.APP_VERSION}} {{.REGISTRY_HOST}}/{{.REGISTRY_USER}}/{{.APP_NAME}}:{{.TAG_NAME}}
-      - docker push {{.REGISTRY_HOST}}/{{.REGISTRY_USER}}/{{.APP_NAME}}:{{.TAG_NAME}}
+      - docker tag {{.APP_NAME}}:{{.APP_VERSION}} {{.REGISTRY_USER}}/{{.APP_NAME}}:{{.TAG_NAME}}
+      - docker push {{.REGISTRY_USER}}/{{.APP_NAME}}:{{.TAG_NAME}}
 
   save:
     desc: Save a Docker image to a file
