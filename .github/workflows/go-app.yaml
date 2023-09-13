@@ -8,6 +8,9 @@ on:
       app_version:
         type: string
         required: true
+      go_private:
+        type: string
+        required: false
       registry_host:
         type: string
         required: false
@@ -53,8 +56,10 @@ jobs:
       - uses: arduino/setup-task@v1
       - uses: actions/setup-go@v4
         with:
-          cache: false
           go-version: '1.21'
+      - uses: ashep/go-ci/actions/go-private@v1
+        with:
+          go_private: ${{ inputs.go_private }}
       - run: go mod vendor
       - run: task init
       - run: task test:unit
@@ -67,8 +72,10 @@ jobs:
       - uses: arduino/setup-task@v1
       - uses: actions/setup-go@v4
         with:
-          cache: false
           go-version: '1.21'
+      - uses: ashep/go-ci/actions/go-private@v1
+        with:
+          go_private: ${{ inputs.go_private }}
       - run: go mod vendor
       - run: task init
       - run: task test:func

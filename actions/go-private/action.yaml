@@ -1,0 +1,25 @@
+name: Go private
+description: Setup access to go private modules
+
+inputs:
+  go_private:
+    required: false
+    description: Go private modules list
+
+runs:
+  using: composite
+  steps:
+    - shell: sh
+      if: ${{ inputs.go_private != '' && secrets.CI_PRIVATE_KEY != '' }}
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null	
+        ssh-add - <<< "${{ secrets.CI_PRIVATE_KEY }}"
+        echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
+    - shell: sh
+      run: |
+        git config --global url."ssh://git@github.com/".insteadOf https://github.com/
+        echo "GOPRIVATE={{ inputs.go_private }}" >> $GITHUB_ENV
