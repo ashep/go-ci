@@ -2,6 +2,9 @@ name: Go private
 description: Setup access to go private modules
 
 inputs:
+  ci_private_key:
+    required: false
+    description: CI private key
   go_private:
     required: false
     description: Go private modules list
@@ -10,14 +13,14 @@ runs:
   using: composite
   steps:
     - shell: sh
-      if: ${{ inputs.go_private != '' && secrets.CI_PRIVATE_KEY != '' }}
+      if: ${{ inputs.go_private != '' && inputs.ci_private_key != '' }}
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
         mkdir -p ~/.ssh
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         ssh-agent -a $SSH_AUTH_SOCK > /dev/null	
-        ssh-add - <<< "${{ secrets.CI_PRIVATE_KEY }}"
+        ssh-add - <<< "${{ inputs.ci_private_key }}"
         echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
     - shell: sh
       run: |
