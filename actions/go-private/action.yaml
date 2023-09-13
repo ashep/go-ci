@@ -21,9 +21,9 @@ runs:
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         ssh-agent -a $SSH_AUTH_SOCK > /dev/null	
         ssh-add - <<< "${{ inputs.ci_private_key }}"
-        echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
+#        echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
     - shell: sh
       if: ${{ inputs.go_private != '' && inputs.ci_private_key != '' }}
       run: |
         git config --global url."ssh://git@github.com/".insteadOf https://github.com/
-        echo "GOPRIVATE=${{ inputs.go_private }}" >> $GITHUB_ENV
+#        echo "GOPRIVATE=${{ inputs.go_private }}" >> $GITHUB_ENV
