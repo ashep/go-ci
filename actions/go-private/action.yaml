@@ -32,3 +32,4 @@ runs:
         ssh-add ci.key
         git config --global url."ssh://git@github.com".insteadOf "https://github.com"
         go env -w GOPRIVATE="${{ inputs.go_private }}"
+        go mod vendor
