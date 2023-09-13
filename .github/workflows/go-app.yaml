@@ -63,6 +63,7 @@ jobs:
         with:
           ci_private_key: ${{ secrets.ci_private_key }}
           go_private: ${{ inputs.go_private }}
+      - run: ssh -vT git@github.com # debug
       - run: go mod vendor
       - run: task init
       - run: task test:unit
