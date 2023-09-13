@@ -63,6 +63,9 @@ jobs:
         with:
           ci_private_key: ${{ secrets.ci_private_key }}
           go_private: ${{ inputs.go_private }}
+      - run: go env  # debug
+      - run: ps aux  # debug
+      - run: cat .gitconfig  # debug
       - run: go mod vendor
       - run: task init
       - run: task test:unit
