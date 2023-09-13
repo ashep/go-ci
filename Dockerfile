@@ -1,5 +1,5 @@
 ARG ARCH
-FROM --platform=linux/${ARCH} golang:alpine AS build
+FROM --platform=linux/${ARCH} golang:1.21-alpine AS build
 
 ARG APP_NAME
 ARG APP_VERSION
