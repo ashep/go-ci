@@ -93,6 +93,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
       - run: task init
       - run: task app:build
       - uses: ashep/go-ci/actions/build-image@v1
