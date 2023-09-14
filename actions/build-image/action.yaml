@@ -7,6 +7,9 @@ inputs:
   app_version:
     required: true
     description: Application version
+  dockerfile:
+    required: true
+    description: Path to the Dockerfile
 
 runs:
   using: composite
@@ -16,6 +19,7 @@ runs:
       env:
         APP_NAME: ${{ inputs.app_name }}
         APP_VERSION: ${{ inputs.app_version }}
+        DOCKERFILE: ${{ inputs.dockerfile }}
     - run: task docker:save
       shell: sh
       env:

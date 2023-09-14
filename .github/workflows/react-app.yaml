@@ -1,4 +1,4 @@
-name: go-app
+name: react-app
 on:
   workflow_call:
     inputs:
@@ -8,24 +8,12 @@ on:
       app_version:
         type: string
         required: true
-      go_private:
-        type: string
-        required: false
       registry_host:
         type: string
         required: false
       registry_user:
         type: string
         required: false
-      run_golangci_lint:
-        type: boolean
-        default: true
-      run_unit_tests:
-        type: boolean
-        default: true
-      run_func_tests:
-        type: boolean
-        default: true
       run_build_image:
         type: boolean
         default: true
@@ -39,70 +27,20 @@ on:
         required: false
 
 jobs:
-  golangci-lint:
-    runs-on: ubuntu-latest
-    if: ${{ inputs.run_golangci_lint }}
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v3
-      - uses: arduino/setup-task@v1
-      - uses: ashep/go-ci/actions/setup-golangci-lint@v1
-      - run: task init
-      - run: task lint:golangci
-
-  unit-tests:
-    runs-on: ubuntu-latest
-    if: ${{ inputs.run_unit_tests }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: arduino/setup-task@v1
-      - uses: actions/setup-go@v4
-        with:
-          go-version: '1.21'
-      - uses: ashep/go-ci/actions/go-private@v1
-        with:
-          ci_private_key: ${{ secrets.ci_private_key }}
-          go_private: ${{ inputs.go_private }}
-      - run: go mod vendor
-      - run: task init
-      - run: task test:unit
-
-  func-tests:
-    runs-on: ubuntu-latest
-    if: ${{ inputs.run_func_tests }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: arduino/setup-task@v1
-      - uses: actions/setup-go@v4
-        with:
-          go-version: '1.21'
-      - uses: ashep/go-ci/actions/go-private@v1
-        with:
-          ci_private_key: ${{ secrets.ci_private_key }}
-          go_private: ${{ inputs.go_private }}
-      - run: go mod vendor
-      - run: task init
-      - run: task test:func
-
   build-image:
     runs-on: ubuntu-latest
     if: ${{ inputs.run_build_image }}
-    needs:
-      - unit-tests
-      - func-tests
     steps:
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
-      - uses: actions/setup-go@v4
-        with:
-          go-version: '1.21'
+      - uses: actions/setup-node@v3
       - run: task init
       - run: task app:build
       - uses: ashep/go-ci/actions/build-image@v1
         with:
           app_name: ${{ inputs.app_name }}
           app_version: ${{ inputs.app_version }}
-          dockerfile: .ci/Dockerfile-go
+          dockerfile: .ci/Dockerfile-react
 
   push-image:
     runs-on: ubuntu-latest

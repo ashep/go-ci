@@ -1,0 +1,4 @@
+ARG ARCH
+FROM --platform=linux/${ARCH} caddy:2-alpine
+
+COPY ./build /usr/share/caddy
