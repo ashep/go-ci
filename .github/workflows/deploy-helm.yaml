@@ -16,14 +16,16 @@ on:
         required: true
 
 jobs:
-  deploy-helm:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: azure/setup-helm@v3
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup kubeconfig
+      - name: Create kubeconfig
         run: | 
+          mkdir -p ~/.kube
           (cat <<EOF
           ${{ secrets.kubeconfig }}
           EOF
