@@ -1,0 +1,32 @@
+name: deploy-helm
+on:
+  workflow_call:
+    inputs:
+      release:
+        type: string
+        required: true
+      chart:
+        type: string
+        required: true
+      namespace:
+        type: string
+        required: true
+    secrets:
+      kubeconfig:
+        required: true
+
+jobs:
+  setup-helm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: azure/setup-helm@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup kubeconfig
+        run: | 
+          (cat <<EOF
+          ${{ secrets.kubeconfig }}
+          EOF
+          ) > ~/.kube/config
+      - name: Deploy
+        run: helm upgrade -n ${{ inputs.namespace }} --install --create-namespace ${{ inputs.release }} ${{ inputs.chart }}

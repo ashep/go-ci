@@ -1,4 +1,4 @@
-name: react-app
+name: build-react-app
 on:
   workflow_call:
     inputs:
