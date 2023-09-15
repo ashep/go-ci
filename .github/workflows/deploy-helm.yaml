@@ -30,5 +30,9 @@ jobs:
           ${{ secrets.kubeconfig }}
           EOF
           ) > ~/.kube/config
-      - name: Deploy
+          chmod 0600 ~/.kube/config
+      - uses: actions/checkout@v3
+      - uses: arduino/setup-task@v1
+      - run: task init
+      - name: Deploy # TODO: move this to taskfile
         run: helm upgrade -n ${{ inputs.namespace }} --install --create-namespace ${{ inputs.release }} ${{ inputs.chart }}
