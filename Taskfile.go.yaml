@@ -17,7 +17,7 @@ tasks:
       - if [ -z "{{.ARCH}}" ]; then echo "ARCH var is not set"; exit 1; fi
       - mkdir -p build
       - go mod vendor
-      - go build -ldflags="-X 'main.buildName=${APP_NAME}' -X 'main.buildVer=${APP_VERSION}'" -o build/app main.go
+      - go build -ldflags="-extldflags=-static -X 'main.buildName=${APP_NAME}' -X 'main.buildVer=${APP_VERSION}'" -o build/app main.go
 
   migrate-up:
     desc: Apply DB migrations
