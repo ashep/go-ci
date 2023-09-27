@@ -7,11 +7,12 @@ tasks:
       HELM_VALUES_PATH:
         sh: echo "${HELM_VALUES_PATH:-values.yaml}"
       COMMIT_SHA:
-        sh: echo "${COMMIT_SHA:-unknown}"
+        sh: echo "${COMMIT_SHA:-$(git rev-parse HEAD)}"
     cmds:
       - if [ -z "${HELM_NAMESPACE}" ]; then echo "NAMESPACE var is not set"; exit 1; fi
       - if [ -z "${HELM_RELEASE}" ]; then echo "NAMESPACE var is not set"; exit 1; fi
       - if [ -z "${HELM_CHART}" ]; then echo "CHART var is not set"; exit 1; fi
       - if [ -z "${HELM_VALUES_PATH}" ]; then echo "VALUES_PATH var is not set"; exit 1; fi
       - if [ ! -z "${HELM_REPOSITORY}" ]; then helm repo add ${HELM_REPOSITORY} && helm repo update; fi
-      - helm upgrade -i -n ${HELM_NAMESPACE} --create-namespace -f ${HELM_VALUES_PATH} --set "app.kubernetes.io/commit=${COMMIT_SHA}" ${HELM_RELEASE} ${HELM_CHART}
+      - 'echo -e "podAnnotations:\n  app.kubernetes.io/commit: ${COMMIT_SHA}" >> helm.values.ci.yaml'
+      - helm upgrade -i -n ${HELM_NAMESPACE} --create-namespace -f helm.values.ci.yaml -f ${HELM_VALUES_PATH} ${HELM_RELEASE} ${HELM_CHART}
