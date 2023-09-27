@@ -2,13 +2,16 @@ name: deploy-helm
 on:
   workflow_call:
     inputs:
-      release:
+      namespace:
         type: string
         required: true
       chart:
         type: string
         required: true
-      namespace:
+      release:
+        type: string
+        required: true
+      values_path:
         type: string
         required: true
     secrets:
@@ -35,4 +38,9 @@ jobs:
       - uses: arduino/setup-task@v1
       - run: task init
       - name: Deploy # TODO: move this to taskfile
-        run: helm upgrade -n ${{ inputs.namespace }} --install --create-namespace ${{ inputs.release }} ${{ inputs.chart }}
+        env:
+          HELM_NAMESPACE: "${{ inputs.namespace }}"
+          HELM_CHART: "${{ inputs.chart }}"
+          HELM_RELEASE: "${{ inputs.release }}"
+          HELM_VALUES_PATH: "${{ inputs.values_path }}"
+        run: task helm:upgrade
