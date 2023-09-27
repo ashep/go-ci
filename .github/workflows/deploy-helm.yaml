@@ -14,13 +14,10 @@ on:
       release:
         type: string
         required: true
-      values_path:
-        type: string
-        required: false
     secrets:
       kubeconfig:
         required: true
-      values_add:
+      values:
         required: false
 
 jobs:
@@ -49,6 +46,5 @@ jobs:
           HELM_REPOSITORY: ${{ inputs.repository }}
           HELM_CHART: ${{ inputs.chart }}
           HELM_RELEASE: ${{ inputs.release }}
-          HELM_VALUES_PATH: ${{ inputs.values_path }}
-          HELM_VALUES_ADD: ${{ secrets.values_add }}
+          HELM_VALUES_YAML: ${{ secrets.values }}
         run: task helm:upgrade
