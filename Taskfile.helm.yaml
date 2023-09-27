@@ -14,5 +14,6 @@ tasks:
       - if [ -z "${HELM_CHART}" ]; then echo "CHART var is not set"; exit 1; fi
       - if [ -z "${HELM_VALUES_PATH}" ]; then echo "VALUES_PATH var is not set"; exit 1; fi
       - if [ ! -z "${HELM_REPOSITORY}" ]; then helm repo add ${HELM_REPOSITORY} && helm repo update; fi
-      - 'echo -e "podAnnotations:\n  app.kubernetes.io/commit: ${COMMIT_SHA}" >> helm.values.ci.yaml'
-      - helm upgrade -i -n ${HELM_NAMESPACE} --create-namespace -f helm.values.ci.yaml -f ${HELM_VALUES_PATH} ${HELM_RELEASE} ${HELM_CHART}
+      - 'echo -e "podAnnotations:\n  app.kubernetes.io/commit: ${COMMIT_SHA}" > helm.values.ci.yaml'
+      - echo -e "${HELM_VALUES_ADD}" > helm.values.add.yaml
+      - helm upgrade -i -n ${HELM_NAMESPACE} --create-namespace -f helm.values.ci.yaml -f helm.values.add.yaml -f ${HELM_VALUES_PATH} ${HELM_RELEASE} ${HELM_CHART}
