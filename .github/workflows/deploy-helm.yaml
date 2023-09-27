@@ -39,8 +39,9 @@ jobs:
       - run: task init
       - name: Deploy # TODO: move this to taskfile
         env:
-          HELM_NAMESPACE: "${{ inputs.namespace }}"
-          HELM_CHART: "${{ inputs.chart }}"
-          HELM_RELEASE: "${{ inputs.release }}"
-          HELM_VALUES_PATH: "${{ inputs.values_path }}"
+          HELM_NAMESPACE: ${{ inputs.namespace }}
+          HELM_CHART: ${{ inputs.chart }}
+          HELM_RELEASE: ${{ inputs.release }}
+          HELM_VALUES_PATH: ${{ inputs.values_path }}
+          COMMIT_SHA: ${{ github.sha }}
         run: task helm:upgrade
