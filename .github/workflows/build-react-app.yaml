@@ -15,18 +15,18 @@ on:
         type: string
         required: false
     secrets:
+      dotenv:
+        required: false
       ci_private_key:
         required: false
       registry_password:
-        required: false
-      dotenv:
         required: false
 
 jobs:
   build-image:
     runs-on: ubuntu-latest
     env:
-      DOTENV: ${{ inputs.dotenv }}
+      DOTENV: ${{ secrets.dotenv }}
     steps:
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
