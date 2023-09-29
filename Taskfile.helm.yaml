@@ -12,5 +12,5 @@ tasks:
       - if [ -z "${HELM_CHART}" ]; then echo "CHART var is not set"; exit 1; fi
       - if [ ! -z "${HELM_REPOSITORY}" ]; then helm repo add ${HELM_REPOSITORY}; fi
       - helm repo update
-      - echo -e "${HELM_VALUES_YAML}" > values-add.yaml
+      - echo -e "${HELM_VALUES_YAML}" > values.add.yaml
       - helm upgrade -i -n ${HELM_NAMESPACE} --create-namespace -f values.add.yaml ${HELM_RELEASE} ${HELM_CHART}
