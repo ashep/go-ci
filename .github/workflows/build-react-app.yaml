@@ -8,18 +8,15 @@ on:
       app_version:
         type: string
         required: true
+      dotenv:
+        type: string
+        required: false
       registry_host:
         type: string
         required: false
       registry_user:
         type: string
         required: false
-      run_build_image:
-        type: boolean
-        default: true
-      run_push_image:
-        type: boolean
-        default: true
     secrets:
       ci_private_key:
         required: false
@@ -29,7 +26,8 @@ on:
 jobs:
   build-image:
     runs-on: ubuntu-latest
-    if: ${{ inputs.run_build_image }}
+    env:
+      DOTENV: ${{ inputs.dotenv }}
     steps:
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
@@ -44,7 +42,7 @@ jobs:
 
   push-image:
     runs-on: ubuntu-latest
-    if: ${{ inputs.run_push_image && inputs.registry_user != '' }}
+    if: ${{ inputs.registry_user != '' }}
     needs:
       - build-image
     steps:
