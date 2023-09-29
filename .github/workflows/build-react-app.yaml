@@ -8,9 +8,6 @@ on:
       app_version:
         type: string
         required: true
-      dotenv:
-        type: string
-        required: false
       registry_host:
         type: string
         required: false
@@ -21,6 +18,8 @@ on:
       ci_private_key:
         required: false
       registry_password:
+        required: false
+      dotenv:
         required: false
 
 jobs:
