@@ -39,7 +39,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
       - run: task init
-      - name: Deploy # TODO: move this to taskfile
+      - name: Deploy
+        run: task helm:upgrade
         env:
           COMMIT_SHA: ${{ github.sha }}
           HELM_NAMESPACE: ${{ inputs.namespace }}
@@ -47,4 +48,3 @@ jobs:
           HELM_CHART: ${{ inputs.chart }}
           HELM_RELEASE: ${{ inputs.release }}
           HELM_VALUES_YAML: ${{ secrets.values }}
-        run: task helm:upgrade

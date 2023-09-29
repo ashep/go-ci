@@ -4,8 +4,6 @@ tasks:
   upgrade:
     desc: Upgrade a Helm release
     env:
-      HELM_VALUES_PATH:
-        sh: echo "${HELM_VALUES_PATH:-values.yaml}"
       COMMIT_SHA:
         sh: echo "${COMMIT_SHA:-$(git rev-parse HEAD)}"
     cmds:
@@ -14,6 +12,5 @@ tasks:
       - if [ -z "${HELM_CHART}" ]; then echo "CHART var is not set"; exit 1; fi
       - if [ ! -z "${HELM_REPOSITORY}" ]; then helm repo add ${HELM_REPOSITORY}; fi
       - helm repo update
-      - 'echo -e "podAnnotations:\n  app.kubernetes.io/commit: ${COMMIT_SHA}" > helm.values.ci.yaml'
-      - echo -e "${HELM_VALUES_YAML}" > helm.values.add.yaml
-      - helm upgrade -i -n ${HELM_NAMESPACE} --create-namespace -f helm.values.ci.yaml -f helm.values.add.yaml ${HELM_RELEASE} ${HELM_CHART}
+      - echo -e "${HELM_VALUES_YAML}" > values-add.yaml
+      - helm upgrade -i -n ${HELM_NAMESPACE} --create-namespace -f values.add.yaml ${HELM_RELEASE} ${HELM_CHART}
