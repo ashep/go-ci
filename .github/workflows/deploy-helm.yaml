@@ -49,7 +49,7 @@ jobs:
             git.sha: ${{ github.sha }}
           EOF
           ) > values.ci.yaml
-          echo -e "${{ secrets.values }}" > values.add.yaml
+          echo -e '${{ secrets.values }}' > values.add.yaml
           cat values.add.yaml
       - name: Deploy
         run: helm upgrade -i -n ${{ inputs.namespace }} --create-namespace -f values.add.yaml -f values.ci.yaml ${{ inputs.release }} ${{ inputs.chart }}
