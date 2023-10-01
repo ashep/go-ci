@@ -24,6 +24,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Setup Helm
         uses: azure/setup-helm@v3
         with:
@@ -36,15 +38,16 @@ jobs:
           EOF
           ) > ~/.kube/config
           chmod 0600 ~/.kube/config
-      - uses: actions/checkout@v3
-      - uses: arduino/setup-task@v1
-      - run: task init
+      - name: Setup Helm repo
+        if: ${{ inputs.repository }} != ''
+        run: helm repo add ${{ inputs.repository }} && helm repo update
+      - name: Prepare values
+        run: |
+          (cat <<EOF
+          podAnnotations:
+            git.ref: ${{ github.ref }}
+            git.sha: ${{ github.sha }}
+          EOF
+          echo -e "${{ secrets.values }}" > values.add.yaml
       - name: Deploy
-        run: task helm:upgrade
-        env:
-          COMMIT_SHA: ${{ github.sha }}
-          HELM_NAMESPACE: ${{ inputs.namespace }}
-          HELM_REPOSITORY: ${{ inputs.repository }}
-          HELM_CHART: ${{ inputs.chart }}
-          HELM_RELEASE: ${{ inputs.release }}
-          HELM_VALUES_YAML: ${{ secrets.values }}
+        run: helm upgrade -i -n ${{ inputs.namespace }} --create-namespace -f values.add.yaml -f values.ci.yaml ${{ inputs.release }} ${{ inputs.chart }}
