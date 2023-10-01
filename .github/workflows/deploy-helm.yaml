@@ -39,7 +39,7 @@ jobs:
           ) > ~/.kube/config
           chmod 0600 ~/.kube/config
       - name: Setup Helm repo
-        if: ${{ inputs.repository }} != ''
+        if: ${{ inputs.repository }}
         run: helm repo add ${{ inputs.repository }} && helm repo update
       - name: Prepare values
         run: |
