@@ -20,18 +20,6 @@ on:
       run_golangci_lint:
         type: boolean
         default: true
-      run_unit_tests:
-        type: boolean
-        default: true
-      run_func_tests:
-        type: boolean
-        default: true
-      run_build_image:
-        type: boolean
-        default: true
-      run_push_image:
-        type: boolean
-        default: true
     secrets:
       ci_private_key:
         required: false
@@ -55,7 +43,6 @@ jobs:
 
   unit-tests:
     runs-on: ubuntu-latest
-    if: ${{ inputs.run_unit_tests }}
     steps:
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
@@ -72,7 +59,6 @@ jobs:
 
   func-tests:
     runs-on: ubuntu-latest
-    if: ${{ inputs.run_func_tests }}
     steps:
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
@@ -89,7 +75,6 @@ jobs:
 
   build-image:
     runs-on: ubuntu-latest
-    if: ${{ inputs.run_build_image }}
     needs:
       - unit-tests
       - func-tests
@@ -109,7 +94,7 @@ jobs:
 
   push-image:
     runs-on: ubuntu-latest
-    if: ${{ inputs.run_push_image && inputs.registry_user != '' }}
+    if: ${{ inputs.registry_user != '' }}
     needs:
       - build-image
     steps:
