@@ -3,10 +3,14 @@ on: workflow_call
 jobs:
   golangci-lint:
     runs-on: ubuntu-latest
+    if: ${{ inputs.run_golangci_lint }}
     continue-on-error: true
     steps:
       - uses: actions/checkout@v3
       - uses: arduino/setup-task@v1
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
       - uses: ashep/go-ci/actions/setup-golangci-lint@v1
       - run: task init
       - run: task lint:golangci
