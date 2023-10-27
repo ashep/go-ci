@@ -17,9 +17,6 @@ on:
       registry_user:
         type: string
         required: false
-      run_golangci_lint:
-        type: boolean
-        default: true
     secrets:
       ci_private_key:
         required: false
@@ -29,7 +26,6 @@ on:
 jobs:
   golangci-lint:
     runs-on: ubuntu-latest
-    if: ${{ inputs.run_golangci_lint }}
     continue-on-error: true
     steps:
       - uses: actions/checkout@v3

@@ -3,7 +3,6 @@ on: workflow_call
 jobs:
   golangci-lint:
     runs-on: ubuntu-latest
-    if: ${{ inputs.run_golangci_lint }}
     continue-on-error: true
     steps:
       - uses: actions/checkout@v3
