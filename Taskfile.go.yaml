@@ -7,7 +7,7 @@ tasks:
       APP_CONFIG_PATH:
         sh: if [ -f "config.yaml" ]; then echo config.yaml; fi
     cmds:
-      - go run -race -ldflags="-X 'main.appName=${APP_NAME}' -X 'main.appVer=${APP_VERSION}'" main.go {{.CLI_ARGS}}
+      - go run -race main.go {{.CLI_ARGS}}
 
   build:
     desc: Build the application
@@ -16,10 +16,9 @@ tasks:
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
       - if [ -z "{{.APP_VERSION}}" ]; then echo "APP_VERSION var is not set"; exit 1; fi
-      - if [ -z "{{.ARCH}}" ]; then echo "ARCH var is not set"; exit 1; fi
       - mkdir -p build
       - go mod vendor
-      - go build -ldflags="-X 'main.appName=${APP_NAME}' -X 'main.appVer=${APP_VERSION}'" -o build/app main.go
+      - go build -ldflags="-X 'github.com/ashep/go-apprun.appName={{.APP_NAME}}' -X 'github.com/ashep/go-apprun.appVer={{.APP_VERSION}}'" -o build/app main.go
 
   migrate-up:
     desc: Apply DB migrations
