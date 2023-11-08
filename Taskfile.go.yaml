@@ -7,7 +7,7 @@ tasks:
       APP_CONFIG_PATH:
         sh: if [ -f "config.yaml" ]; then echo config.yaml; fi
     cmds:
-      - go run -race main.go {{.CLI_ARGS}}
+      - go run -race -ldflags="-X 'main.appName=${APP_NAME}' -X 'main.appVer=${APP_VERSION}'" main.go {{.CLI_ARGS}}
 
   build:
     desc: Build the application
