@@ -2,7 +2,7 @@ name: Go private
 description: Setup access to go private modules
 
 inputs:
-  ci_private_key:
+  private_key:
     required: false
     description: CI private key
   go_private:
@@ -13,7 +13,7 @@ runs:
   using: composite
   steps:
     - shell: sh
-      if: ${{ inputs.go_private != '' && inputs.ci_private_key != '' }}
+      if: ${{ inputs.go_private != '' && inputs.private_key != '' }}
       run: |
         mkdir -p ~/.ssh
         eval $(ssh-agent -s)
@@ -23,7 +23,7 @@ runs:
         EOF
         ) > ~/.ssh/config
         (cat <<EOF
-        ${{ inputs.ci_private_key }}
+        ${{ inputs.private_key }}
         EOF
         ) > ~/.ssh/id_rsa
         chmod 0600 ~/.ssh/id_rsa
