@@ -18,7 +18,7 @@ on:
         type: string
         required: false
     secrets:
-      ci_private_key:
+      private_key:
         required: false
       registry_password:
         required: false
@@ -59,7 +59,7 @@ jobs:
           go-version: '1.21'
       - uses: ashep/go-ci/actions/go-private@v1
         with:
-          ci_private_key: ${{ secrets.ci_private_key }}
+          private_key: ${{ secrets.private_key }}
           go_private: ${{ inputs.go_private }}
       - run: go mod vendor
       - run: if [ -f docker-compose.tests.yaml ]; then docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml up --remove-orphans -d; fi
