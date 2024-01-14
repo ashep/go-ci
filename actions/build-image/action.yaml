@@ -9,13 +9,13 @@ inputs:
     description: Application version
   dockerfile:
     required: true
-    description: Path to the Dockerfile
+    description: Path to Dockerfile
 
 runs:
   using: composite
   steps:
     - shell: sh
-      run: docker build --build-arg ARCH=amd64 -t ${{ inputs.app_name }}:${{ inputs.app_version }} -f ${{ inputs.dockerfile }} .
+      run: docker build --no-cache --build-arg ARCH=amd64 -t ${{ inputs.app_name }}:${{ inputs.app_version }} -f ${{ inputs.dockerfile }} .
     - shell: sh
       run: |
         mkdir -p tmp/app_image
