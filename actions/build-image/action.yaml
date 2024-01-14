@@ -14,17 +14,12 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: task docker:build
-      shell: sh
-      env:
-        APP_NAME: ${{ inputs.app_name }}
-        APP_VERSION: ${{ inputs.app_version }}
-        DOCKERFILE: ${{ inputs.dockerfile }}
-    - run: task docker:save
-      shell: sh
-      env:
-        APP_NAME: ${{ inputs.app_name }}
-        APP_VERSION: ${{ inputs.app_version }}
+    - shell: sh
+      run: docker build --build-arg ARCH=amd64 -t ${{ inputs.app_name }}:${{ inputs.app_version }} -f ${{ inputs.dockerfile }} .
+    - shell: sh
+      run: |
+        mkdir -p tmp/app_image
+        docker save -o tmp/app_image/${{ inputs.app_name }}_${{ inputs.app_version }}.tar ${{ inputs.app_version }}:${{ inputs.app_version }}
     - uses: actions/upload-artifact@v3
       with:
         name: app_image
