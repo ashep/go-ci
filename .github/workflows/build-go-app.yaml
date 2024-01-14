@@ -8,6 +8,9 @@ on:
       app_version:
         type: string
         required: true
+      dockerfile:
+        type: string
+        required: true
       go_private:
         type: string
         required: false
@@ -78,7 +81,7 @@ jobs:
         with:
           app_name: ${{ inputs.app_name }}
           app_version: ${{ inputs.app_version }}
-          dockerfile: .ci/Dockerfile-go
+          dockerfile: ${{ inputs.dockerfile }}
 
   push-image:
     runs-on: ubuntu-latest
