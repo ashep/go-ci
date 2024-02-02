@@ -19,9 +19,9 @@ runs:
     - shell: sh
       run: |
         mkdir -p tmp/app_image
-        docker save -o tmp/app_image/${{ inputs.app_name }}_${{ inputs.app_version }}.tar ${{ inputs.app_version }}:${{ inputs.app_version }}
+        docker save -o tmp/app_image/${{ inputs.app_name }}_${{ inputs.app_version }}.tar ${{ inputs.app_name }}:${{ inputs.app_version }}
     - uses: actions/upload-artifact@v3
       with:
         name: app_image
         path: tmp/app_image/
-        retention-days: 1
+        retention-days: 7
