@@ -24,7 +24,7 @@ runs:
       run: |
         mkdir -p tmp/app_image
         docker save -o tmp/app_image/${{ inputs.app_name }}_${{ inputs.app_version }}.tar ${{ inputs.app_name }}:${{ inputs.app_version }}
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: app_image
         path: tmp/app_image/

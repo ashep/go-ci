@@ -20,20 +20,14 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: app_image
         path: tmp/app_image
-    - run: task docker:load
-      shell: sh
-      env:
-        APP_NAME: ${{ inputs.app_name }}
-        APP_VERSION: ${{ inputs.app_version }}
-    - run: task docker:push
-      shell: sh
-      env:
-        APP_NAME: ${{ inputs.app_name }}
-        APP_VERSION: ${{ inputs.app_version }}
-        REGISTRY_HOST: ${{ inputs.registry_host }}
-        REGISTRY_USER: ${{ inputs.registry_user }}
-        TAG_NAME: ${{ inputs.tag_name }}
+    - shell: sh
+      run: docker load -i tmp/app_image/${{ inputs.app_name }}_${{ inputs.app_version }}.tar
+    - shell: sh
+      run: |
+        docker tag ${{ inputs.app_name }}:${{ inputs.app_version }} ${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
+        docker push ${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
+      
