@@ -85,6 +85,10 @@ jobs:
           repository: ashep/ci
           ref: v1
           path: '.ci'
+      - uses: ashep/go-ci/actions/go-private@v1
+        with:
+          private_key: ${{ secrets.private_key }}
+          go_private: ${{ inputs.go_private }}
       - uses: ashep/ci/actions/build-image@v1
         with:
           app_name: ${{ inputs.app_name }}
