@@ -15,8 +15,6 @@ runs:
   using: composite
   steps:
     - shell: sh
-      run: docker buildx prune -f --all
-    - shell: sh
       run: docker build --no-cache --build-arg ARCH=amd64 -t ${{ inputs.app_name }}:${{ inputs.app_version }} -f ${{ inputs.dockerfile }} .
     - shell: sh
       run: |
