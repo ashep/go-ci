@@ -11,16 +11,15 @@ on:
       dockerfile:
         type: string
         default: '.ci/go/Dockerfile'
-        required: false
       go_private:
         type: string
-        required: false
       registry_host:
         type: string
-        required: false
       registry_user:
         type: string
-        required: false
+      golangcilint_enabled:
+        type: boolean
+        default: true
     secrets:
       private_key:
         required: false
@@ -30,6 +29,7 @@ on:
 jobs:
   golangci-lint:
     runs-on: ubuntu-latest
+    if: ${{ inputs.golangcilint_enabled == true }}
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4

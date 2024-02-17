@@ -30,4 +30,3 @@ runs:
       run: |
         docker tag ${{ inputs.app_name }}:${{ inputs.app_version }} ${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
         docker push ${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
-      
