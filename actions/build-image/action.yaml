@@ -10,6 +10,15 @@ inputs:
   dockerfile:
     required: true
     description: Path to the Dockerfile
+  registry_host:
+    required: false
+    description: Registry hostname
+  registry_user:
+    required: true
+    description: Registry username
+  tag_name:
+    required: true
+    description: Docker tag
 
 runs:
   using: composite
@@ -21,11 +30,6 @@ runs:
     - shell: sh
       run: docker build --no-cache --build-arg ARCH=amd64 -t ${{ inputs.app_name }}:${{ inputs.app_version }} -f ${{ inputs.dockerfile }} .
     - shell: sh
-      run: |
-        mkdir -p tmp/app_image
-        docker save -o tmp/app_image/${{ inputs.app_name }}_${{ inputs.app_version }}.tar ${{ inputs.app_name }}:${{ inputs.app_version }}
-    - uses: actions/upload-artifact@v4
-      with:
-        name: app_image
-        path: tmp/app_image/
-        retention-days: 7
+      run: docker tag ${{ inputs.app_name }}:${{ inputs.app_version }} ${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
+    - shell: sh
+      run: docker push ${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
