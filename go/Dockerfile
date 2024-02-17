@@ -2,7 +2,7 @@ ARG ARCH
 ARG APP_NAME
 ARG APP_VERSION
 
-FROM --platform=linux/${ARCH} 1.21-alpine as build
+FROM --platform=linux/${ARCH} golang:1.21-alpine as build
 
 WORKDIR build
 COPY . .
