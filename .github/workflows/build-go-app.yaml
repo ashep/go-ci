@@ -11,7 +11,7 @@ on:
       dockerfile:
         type: string
         default: '.ci/go/Dockerfile'
-        required: true
+        required: false
       go_private:
         type: string
         required: false
