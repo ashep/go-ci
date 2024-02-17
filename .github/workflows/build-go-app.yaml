@@ -10,6 +10,7 @@ on:
         required: true
       dockerfile:
         type: string
+        default: '.ci/go/Dockerfile'
         required: true
       go_private:
         type: string
@@ -77,6 +78,11 @@ jobs:
       - func-tests
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          repository: ashep/ci
+          ref: v1
+          path: '.ci'
       - uses: ashep/ci/actions/build-image@v1
         with:
           app_name: ${{ inputs.app_name }}

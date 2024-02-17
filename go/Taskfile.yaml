@@ -1,12 +1,59 @@
-version: '3'
+version: "3"
 
 tasks:
-  default:
-    desc: Run all tests
+  run:
+    desc: Run the application
+    env:
+      APP_CONFIG_PATH:
+        sh: if [ -f "config.yaml" ]; then echo config.yaml; fi
     cmds:
-      - task: test.unit
+      - go run -race main.go {{.CLI_ARGS}}
 
-  unit:
+  gen:
+    desc: Generate go code
+    cmds:
+      - go generate -v ./...
+
+  gen-proto:
+    desc: Generate protobuf code
+    cmds:
+      - rm -rvf ./sdk/proto
+      - buf lint proto
+      - buf generate
+
+  build:
+    desc: Build the application
+    env:
+      CGO_ENABLED: "0"
+    cmds:
+      - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
+      - if [ -z "{{.APP_VERSION}}" ]; then echo "APP_VERSION var is not set"; exit 1; fi
+      - mkdir -p build
+      - go mod vendor
+      - go build -ldflags="-X 'github.com/ashep/go-apprun.appName={{.APP_NAME}}' -X 'github.com/ashep/go-apprun.appVer={{.APP_VERSION}}'" -o build/app main.go
+
+  migrate-up:
+    desc: Apply DB migrations
+    env:
+      APP_CONFIG_PATH:
+        sh: '[ -f "config.yaml" ] && echo config.yaml'
+    cmds:
+      - go run main.go -migrate-up {{.CLI_ARGS}}
+
+  migrate-down:
+    desc: Revert DB migrations
+    env:
+      APP_CONFIG_PATH:
+        sh: '[ -f "config.yaml" ] && echo config.yaml'
+    cmds:
+      - go run main.go -migrate-down {{.CLI_ARGS}}
+
+  golangci-lint:
+    desc: Run 'golangci-lint' linter
+    cmds:
+      - golangci-lint run ./...
+
+  test:
     desc: Run unit tests
     vars:
       GOTEST:
@@ -14,7 +61,7 @@ tasks:
     cmds:
       - '{{.GOTEST}} -v -mod=vendor -race {{default "./..." .CLI_ARGS}}'
 
-  func:
+  func-test:
     desc: Run functional tests
     vars:
       GOTEST:
@@ -24,14 +71,14 @@ tasks:
       - if [ -f docker-compose.tests.yaml ]; then docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml up --remove-orphans -d; fi
       - if [ -f docker-compose.tests.yaml ]; then docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml run --rm --remove-orphans tests go test -v -mod=vendor -tags=functest ./tests/...; fi
 
-  func:manual:
+  func-test:manual:
     desc: Attach to functional tests container
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
       - if [ -f docker-compose.tests.yaml ]; then docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml up --remove-orphans -d; fi
       - if [ -f docker-compose.tests.yaml ]; then docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml run --rm -i tests sh; fi
 
-  clean:
+  func-test:clean:
     desc: Cleanup test environment
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi

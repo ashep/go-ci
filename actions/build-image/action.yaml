@@ -9,7 +9,7 @@ inputs:
     description: Application version
   dockerfile:
     required: true
-    description: Path to Dockerfile
+    description: Path to the Dockerfile
 
 runs:
   using: composite
