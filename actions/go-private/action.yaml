@@ -3,10 +3,8 @@ description: Setup access to go private modules
 
 inputs:
   private_key:
-    required: false
     description: CI private key
   go_private:
-    required: false
     description: Go private modules list
 
 runs:

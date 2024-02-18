@@ -20,6 +20,9 @@ on:
         type: string
       registry_user:
         type: string
+      govulncheck_enabled:
+        type: boolean
+        default: true
       golangcilint_enabled:
         type: boolean
         default: true
@@ -30,6 +33,13 @@ on:
         required: false
 
 jobs:
+  govulncheck:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.govulncheck_enabled == true }}
+    steps:
+      - run: go install golang.org/x/vuln/cmd/govulncheck@latest
+      - run: govulncheck ./...
+
   golangci-lint:
     runs-on: ubuntu-latest
     if: ${{ inputs.golangcilint_enabled == true }}
@@ -51,8 +61,8 @@ jobs:
           go-version: ${{ inputs.go_version }}
       - uses: ashep/go-ci/actions/go-private@v1
         with:
-          private_key: ${{ secrets.private_key }}
           go_private: ${{ inputs.go_private }}
+          private_key: ${{ secrets.private_key }}
       - run: go mod tidy
       - run: go mod vendor
       - run: go test -race ./...
@@ -66,8 +76,8 @@ jobs:
           go-version: ${{ inputs.go_version }}
       - uses: ashep/go-ci/actions/go-private@v1
         with:
-          private_key: ${{ secrets.private_key }}
           go_private: ${{ inputs.go_private }}
+          private_key: ${{ secrets.private_key }}
       - run: go mod tidy
       - run: go mod vendor
       - run: |
@@ -90,7 +100,6 @@ jobs:
           ref: v1
           path: .ci
       - uses: ashep/go-ci/actions/go-private@v1
-        if: ${{ inputs.go_private != '' }}
         with:
           go_private: ${{ inputs.go_private }}
           private_key: ${{ secrets.private_key }}
