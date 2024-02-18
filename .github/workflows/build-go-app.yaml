@@ -154,7 +154,7 @@ jobs:
       - shell: sh
         run: go mod vendor
       - shell: sh
-        run: go build -ldflags="-X 'github.com/ashep/go-apprun.appName=${{ inputs.app_name }}' -X 'github.com/ashep/go-apprun.appVer=${{ inputs.app_version }}'" -o app.out main.go
+        run: go build -tags osusergo,netgo -ldflags="-extldflags=-static -w -s -X 'github.com/ashep/go-apprun.appName=${{ inputs.app_name }}' -X 'github.com/ashep/go-apprun.appVer=${{ inputs.app_version }}'" -o app.out main.go
       - uses: docker/login-action@v3
         with:
           registry: ${{ inputs.registry_host }}
