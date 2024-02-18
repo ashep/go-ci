@@ -71,7 +71,6 @@ jobs:
         with:
           go_private: ${{ inputs.go_private }}
           private_key: ${{ secrets.private_key }}
-      - run: go mod tidy
       - run: go mod vendor
       - run: go test -race ./...
 
@@ -86,7 +85,6 @@ jobs:
         with:
           go_private: ${{ inputs.go_private }}
           private_key: ${{ secrets.private_key }}
-      - run: go mod tidy
       - run: go mod vendor
       - run: |
           if [ -f docker-compose.tests.yaml ];
