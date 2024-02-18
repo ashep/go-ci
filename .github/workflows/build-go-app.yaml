@@ -4,10 +4,10 @@ on:
     inputs:
       app_name:
         type: string
-        required: true
+        default: ${{ github.event.repository.name }}
       app_version:
         type: string
-        required: true
+        default: ${{ github.ref_name }}
       go_version:
         type: string
         default: '1.22'
