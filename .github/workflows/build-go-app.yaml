@@ -37,6 +37,10 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.govulncheck_enabled == true }}
     steps:
+      - uses: ashep/go-ci/actions/go-private@v1
+        with:
+          go_private: ${{ inputs.go_private }}
+          private_key: ${{ secrets.private_key }}
       - uses: golang/govulncheck-action@v1
         with:
           go-version-input: ${{ inputs.go_version }}
