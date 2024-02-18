@@ -37,6 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.govulncheck_enabled == true }}
     steps:
+      - uses: actions/checkout@v4
       - uses: ashep/go-ci/actions/go-private@v1
         with:
           go_private: ${{ inputs.go_private }}
