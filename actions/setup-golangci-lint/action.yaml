@@ -1,5 +1,11 @@
 name: Setup Taskfile
 description: Setups Taskfile runner
+
+inputs:
+  version:
+    description: golanci-lint version to install
+    required: true
+
 runs:
   using: composite
   steps:
@@ -7,5 +13,5 @@ runs:
       shell: sh
     - run: echo "$(pwd)/bin" >> $GITHUB_PATH
       shell: sh
-    - run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ./bin v1.54.2
+    - run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ./bin v${{ inputs.version }}
       shell: sh

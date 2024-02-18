@@ -24,10 +24,6 @@ runs:
   using: composite
   steps:
     - shell: sh
-      run: |
-        go mod vendor
-        go build -ldflags="-X 'github.com/ashep/go-apprun.appName=${{ inputs.app_name }}' -X 'github.com/ashep/go-apprun.appVer=${{ inputs.app_version }}'" -o app.out main.go
-    - shell: sh
       run: docker build --no-cache --build-arg ARCH=amd64 -t ${{ inputs.app_name }}:${{ inputs.app_version }} -f ${{ inputs.dockerfile }} .
     - shell: sh
       run: docker tag ${{ inputs.app_name }}:${{ inputs.app_version }} ${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
