@@ -1,0 +1,85 @@
+name: lint
+on:
+  workflow_call:
+    inputs:
+      go_version:
+        type: string
+        default: 1.22
+      go_private:
+        type: string
+      govet_enabled:
+        type: boolean
+        default: true
+      staticcheck_enabled:
+        type: boolean
+        default: true
+      govulncheck_enabled:
+        type: boolean
+        default: true
+      golangcilint_enabled:
+        type: boolean
+        default: true
+      golangcilint_version:
+        type: string
+        default: 1.56.2
+    secrets:
+      private_key:
+        required: false
+
+jobs:
+  govet:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.govet_enabled == true }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go_version }}
+      - uses: ashep/go-ci/actions/go-private@v1
+        with:
+          go_private: ${{ inputs.go_private }}
+          private_key: ${{ secrets.private_key }}
+      - run: go vet ./...
+
+  staticcheck:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.staticcheck_enabled == true }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go_version }}
+      - uses: ashep/go-ci/actions/go-private@v1
+        with:
+          go_private: ${{ inputs.go_private }}
+          private_key: ${{ secrets.private_key }}
+      - run: go install honnef.co/go/tools/cmd/staticcheck@latest
+      - run: staticcheck ./...
+
+  govulncheck:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.govulncheck_enabled == true }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go_version }}
+      - uses: ashep/go-ci/actions/go-private@v1
+        with:
+          go_private: ${{ inputs.go_private }}
+          private_key: ${{ secrets.private_key }}
+      - run: go install golang.org/x/vuln/cmd/govulncheck@latest
+      - run: govulncheck ./...
+
+  golangcilint:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.golangcilint_enabled == true }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go_version }}
+      - uses: ashep/go-ci/actions/setup-golangci-lint@v1
+        with:
+          version: ${{ inputs.golangcilint_version }}
+      - run: golangci-lint run ./...
