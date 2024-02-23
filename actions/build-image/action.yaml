@@ -26,6 +26,16 @@ runs:
     - shell: sh
       run: docker build --no-cache --build-arg ARCH=amd64 -t ${{ inputs.app_name }}:${{ inputs.app_version }} -f ${{ inputs.dockerfile }} .
     - shell: sh
-      run: docker tag ${{ inputs.app_name }}:${{ inputs.app_version }} ${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
+      run: |
+        if [ ! -z "${{ inputs.registry_host }}" ]; then
+          docker tag ${{ inputs.app_name }}:${{ inputs.app_version }} ${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
+        else
+          docker tag ${{ inputs.app_name }}:${{ inputs.app_version }} ${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
+        fi
     - shell: sh
-      run: docker push ${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
+      run: |
+        if [ ! -z "${{ inputs.registry_host }}" ]; then
+          docker push ${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
+        else
+          docker push ${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
+        fi
