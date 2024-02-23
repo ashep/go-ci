@@ -41,5 +41,5 @@ jobs:
       - run: |
           if [ -f docker-compose.tests.yaml ];
             then docker compose -f docker-compose.tests.yaml up --remove-orphans -d
-            docker compose -p -f docker-compose.tests.yaml run --rm --remove-orphans tests go test -v -mod=vendor -tags=functest ./tests/...
+            docker compose -f docker-compose.tests.yaml run --rm --remove-orphans tests go test -v -mod=vendor -tags=functest ./tests/...
           fi
