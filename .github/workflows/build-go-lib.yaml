@@ -10,7 +10,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.21'
-      - uses: ashep/go-ci/actions/setup-golangci-lint@v1
+      - uses: ashep/ci/actions/setup-golangci-lint@v1
       - run: task init
       - run: task lint:golangci
 

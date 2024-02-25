@@ -40,7 +40,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ inputs.go_version }}
-      - uses: ashep/go-ci/actions/go-private@v1
+      - uses: ashep/ci/actions/go-private@v1
         with:
           go_private: ${{ inputs.go_private }}
           private_key: ${{ secrets.private_key }}
