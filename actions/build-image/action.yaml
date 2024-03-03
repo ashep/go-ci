@@ -4,9 +4,6 @@ inputs:
   app_name:
     required: true
     description: Application name
-  app_version:
-    required: true
-    description: Application version
   dockerfile:
     required: true
     description: Path to the Dockerfile
@@ -16,26 +13,33 @@ inputs:
   registry_user:
     required: true
     description: Registry username
-  tag_name:
-    required: true
-    description: Docker tag
 
 runs:
   using: composite
   steps:
     - shell: sh
-      run: docker build --no-cache --build-arg ARCH=amd64 -t ${{ inputs.app_name }}:${{ inputs.app_version }} -f ${{ inputs.dockerfile }} .
+      run: docker build --no-cache --build-arg ARCH=amd64 -t ${{ inputs.app_name }}:${{ github.sha }} -f ${{ inputs.dockerfile }} .
     - shell: sh
       run: |
+        IMG_BASE_NAME="${{ inputs.registry_user }}/${{ inputs.app_name }}"
         if [ ! -z "${{ inputs.registry_host }}" ]; then
-          docker tag ${{ inputs.app_name }}:${{ inputs.app_version }} ${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
-        else
-          docker tag ${{ inputs.app_name }}:${{ inputs.app_version }} ${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
+          IMG_BASE_NAME="${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}"
+        fi
+        echo "IMG_BASE_NAME=${IMG_BASE_NAME}" >> ${{ github.env }}
+        echo "SHA_SHORT=$(git rev-parse --short "${{ github.sha }}")" >> ${{ github.env }}
+    - shell: sh
+      run: |
+        docker tag ${{ inputs.app_name }}:${{ github.sha }} ${{ env.IMG_BASE_NAME }}:${{ github.sha }}
+        docker tag ${{ inputs.app_name }}:${{ github.sha }} ${{ env.IMG_BASE_NAME }}:${{ env.SHA_SHORT }}
+        docker tag ${{ inputs.app_name }}:${{ github.sha }} ${{ env.IMG_BASE_NAME }}:${{ github.ref_name }}
+        if [ "${{ github.ref_name }}" == "main" ] || [ "${{ github.ref_name }}" == "master" ] ; then
+          docker tag ${{ inputs.app_name }}:${{ github.sha }} ${{ env.IMG_BASE_NAME }}:latest
         fi
     - shell: sh
       run: |
-        if [ ! -z "${{ inputs.registry_host }}" ]; then
-          docker push ${{ inputs.registry_host }}/${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
-        else
-          docker push ${{ inputs.registry_user }}/${{ inputs.app_name }}:${{ inputs.tag_name }}
+        docker push ${{ env.IMG_BASE_NAME }}:${{ github.sha }}
+        docker push ${{ env.IMG_BASE_NAME }}:${{ env.SHA_SHORT }}
+        docker push ${{ env.IMG_BASE_NAME }}:${{ github.ref_name }}
+        if [ "${{ github.ref_name }}" == "main" ] || [ "${{ github.ref_name }}" == "master" ] ; then
+          docker push ${{ env.IMG_BASE_NAME }}:latest
         fi

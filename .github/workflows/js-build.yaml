@@ -7,7 +7,7 @@ on:
         default: ${{ github.event.repository.name }}
       app_version:
         type: string
-        default: ${{ github.ref_name }}
+        default: ${{ github.sha }}
       dockerfile:
         type: string
         default: .ci/js/Dockerfile
@@ -18,11 +18,9 @@ on:
         type: string
         required: false
     secrets:
-      dotenv:
-        required: false
-      ci_private_key:
-        required: false
       registry_password:
+        required: false
+      dotenv:
         required: false
 
 jobs:
@@ -48,29 +46,9 @@ jobs:
           username: ${{ inputs.registry_user }}
           password: ${{ secrets.registry_password }}
       - uses: ashep/ci/actions/build-image@v1
-        if: github.ref_name == 'main'
         with:
           app_name: ${{ inputs.app_name }}
           app_version: ${{ inputs.app_version }}
           dockerfile: ${{ inputs.dockerfile }}
           registry_host: ${{ inputs.registry_host }}
           registry_user: ${{ inputs.registry_user }}
-          tag_name: latest
-      - uses: ashep/ci/actions/build-image@v1
-        if: github.ref_name != 'main'
-        with:
-          app_name: ${{ inputs.app_name }}
-          app_version: ${{ inputs.app_version }}
-          dockerfile: ${{ inputs.dockerfile }}
-          registry_host: ${{ inputs.registry_host }}
-          registry_user: ${{ inputs.registry_user }}
-          tag_name: dev
-      - uses: ashep/ci/actions/build-image@v1
-        if: github.ref_type == 'tag'
-        with:
-          app_name: ${{ inputs.app_name }}
-          app_version: ${{ inputs.app_version }}
-          dockerfile: ${{ inputs.dockerfile }}
-          registry_host: ${{ inputs.registry_host }}
-          registry_user: ${{ inputs.registry_user }}
-          tag_name: ${{ github.ref_name }}
