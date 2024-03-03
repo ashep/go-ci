@@ -4,10 +4,13 @@ on:
     inputs:
       app_name:
         type: string
-        required: true
+        default: ${{ github.event.repository.name }}
       app_version:
         type: string
-        required: true
+        default: ${{ github.ref_name }}
+      dockerfile:
+        type: string
+        default: .ci/js/Dockerfile
       registry_host:
         type: string
         required: false
@@ -39,11 +42,6 @@ jobs:
           if [ ! -d node_modules ]; then npm install; fi
           echo -e "${{ secrets.dotenv }}" > .env
           npm run build
-      - uses: ashep/ci/actions/build-image@v1
-        with:
-          app_name: ${{ inputs.app_name }}
-          app_version: ${{ inputs.app_version }}
-          dockerfile: .ci/js/Dockerfile
       - uses: docker/login-action@v3
         with:
           registry: ${{ inputs.registry_host }}
