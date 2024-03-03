@@ -36,8 +36,8 @@ jobs:
           path: .ci
       - uses: actions/setup-node@v3
       - run: |
-          - if [ ! -z "${DOTENV}" ]; then echo -e "${DOTENV}" > .env; fi
           - if [ ! -d node_modules ]; then npm install; fi
+          - echo -e "${{ secrets.dotenv }}" > .env
           - npm run build
       - uses: ashep/ci/actions/build-image@v1
         with:
