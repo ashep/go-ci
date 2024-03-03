@@ -17,9 +17,9 @@ inputs:
 runs:
   using: composite
   steps:
-    - shell: sh
+    - shell: bash
       run: docker build --no-cache --build-arg ARCH=amd64 -t ${{ inputs.app_name }}:${{ github.sha }} -f ${{ inputs.dockerfile }} .
-    - shell: sh
+    - shell: bash
       run: |
         IMG_BASE_NAME="${{ inputs.registry_user }}/${{ inputs.app_name }}"
         if [ ! -z "${{ inputs.registry_host }}" ]; then
@@ -27,7 +27,7 @@ runs:
         fi
         echo "IMG_BASE_NAME=${IMG_BASE_NAME}" >> ${{ github.env }}
         echo "SHA_SHORT=$(git rev-parse --short "${{ github.sha }}")" >> ${{ github.env }}
-    - shell: sh
+    - shell: bash
       run: |
         docker tag ${{ inputs.app_name }}:${{ github.sha }} ${{ env.IMG_BASE_NAME }}:${{ github.sha }}
         docker tag ${{ inputs.app_name }}:${{ github.sha }} ${{ env.IMG_BASE_NAME }}:${{ env.SHA_SHORT }}
@@ -35,7 +35,7 @@ runs:
         if [ "${{ github.ref_name }}" == "main" ] || [ "${{ github.ref_name }}" == "master" ] ; then
           docker tag ${{ inputs.app_name }}:${{ github.sha }} ${{ env.IMG_BASE_NAME }}:latest
         fi
-    - shell: sh
+    - shell: bash
       run: |
         docker push ${{ env.IMG_BASE_NAME }}:${{ github.sha }}
         docker push ${{ env.IMG_BASE_NAME }}:${{ env.SHA_SHORT }}
