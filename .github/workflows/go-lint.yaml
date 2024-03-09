@@ -15,7 +15,7 @@ on:
         default: true
       govulncheck_enabled:
         type: boolean
-        default: true
+        default: false # temporary due to the bug: https://github.com/golang/go/issues/66139
       golangcilint_enabled:
         type: boolean
         default: true
