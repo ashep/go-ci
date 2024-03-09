@@ -54,26 +54,8 @@ jobs:
           username: ${{ inputs.registry_user }}
           password: ${{ secrets.registry_password }}
       - uses: ashep/ci/actions/build-image@v1
-        if: github.ref_name == 'main'
         with:
           app_name: ${{ inputs.app_name }}
           dockerfile: ${{ inputs.dockerfile }}
           registry_host: ${{ inputs.registry_host }}
           registry_user: ${{ inputs.registry_user }}
-          tag_name: latest
-      - uses: ashep/ci/actions/build-image@v1
-        if: github.ref_name != 'main'
-        with:
-          app_name: ${{ inputs.app_name }}
-          dockerfile: ${{ inputs.dockerfile }}
-          registry_host: ${{ inputs.registry_host }}
-          registry_user: ${{ inputs.registry_user }}
-          tag_name: dev
-      - uses: ashep/ci/actions/build-image@v1
-        if: github.ref_type == 'tag'
-        with:
-          app_name: ${{ inputs.app_name }}
-          dockerfile: ${{ inputs.dockerfile }}
-          registry_host: ${{ inputs.registry_host }}
-          registry_user: ${{ inputs.registry_user }}
-          tag_name: ${{ github.ref_name }}
