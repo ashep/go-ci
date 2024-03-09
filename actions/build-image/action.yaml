@@ -29,7 +29,6 @@ runs:
         echo "SHA_SHORT=$(git rev-parse --short "${{ github.sha }}")" >> ${{ github.env }}
     - shell: bash
       run: |
-        docker tag ${{ inputs.app_name }}:${{ github.sha }} ${{ env.IMG_BASE_NAME }}:${{ github.sha }}
         docker tag ${{ inputs.app_name }}:${{ github.sha }} ${{ env.IMG_BASE_NAME }}:${{ env.SHA_SHORT }}
         docker tag ${{ inputs.app_name }}:${{ github.sha }} ${{ env.IMG_BASE_NAME }}:${{ github.ref_name }}
         if [ "${{ github.ref_name }}" == "main" ] || [ "${{ github.ref_name }}" == "master" ] ; then
@@ -37,7 +36,6 @@ runs:
         fi
     - shell: bash
       run: |
-        docker push ${{ env.IMG_BASE_NAME }}:${{ github.sha }}
         docker push ${{ env.IMG_BASE_NAME }}:${{ env.SHA_SHORT }}
         docker push ${{ env.IMG_BASE_NAME }}:${{ github.ref_name }}
         if [ "${{ github.ref_name }}" == "main" ] || [ "${{ github.ref_name }}" == "master" ] ; then
