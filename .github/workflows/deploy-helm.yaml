@@ -12,6 +12,9 @@ on:
         type: string
         required: false
         default: ${{ github.event.repository.name }}
+      namespace_suffix:
+        type: string
+        required: false
       release:
         type: string
         required: false
@@ -53,4 +56,7 @@ jobs:
           ) > values.ci.yaml
           echo -e '${{ secrets.values }}' > values.add.yaml
       - name: Deploy
-        run: helm upgrade -i -n ${{ inputs.namespace }} --create-namespace -f values.add.yaml -f values.ci.yaml ${{ inputs.release }} ${{ inputs.chart }}
+        run: |
+          NAMESPACE="${{ inputs.namespace }}"
+          if [ ! -z "${{ inputs.namespace_suffix }}" ]; then NAMESPACE="${NAMESPACE}-${{ inputs.namespace_suffix }}"; fi
+          helm upgrade -i -n ${NAMESPACE} --create-namespace -f values.add.yaml -f values.ci.yaml ${{ inputs.release }} ${{ inputs.chart }}
