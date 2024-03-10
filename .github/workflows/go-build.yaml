@@ -7,7 +7,7 @@ on:
         default: ${{ github.event.repository.name }}
       app_version:
         type: string
-        default: ${{ github.ref_name }}
+        default: ${{ github.sha }}
       dockerfile:
         type: string
         default: .ci/go/Dockerfile

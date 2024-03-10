@@ -1,9 +1,0 @@
-version: "3"
-
-tasks:
-  default:
-    desc: Run all code generation tools
-    cmds:
-      - task: go
-      - task: proto
-
