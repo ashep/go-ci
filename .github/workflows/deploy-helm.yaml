@@ -4,7 +4,8 @@ on:
     inputs:
       chart:
         type: string
-        required: true
+        required: false
+        default: ./helm
       repository:
         type: string
         required: false
