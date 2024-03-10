@@ -2,18 +2,20 @@ name: deploy-helm
 on:
   workflow_call:
     inputs:
-      namespace:
+      chart:
         type: string
         required: true
       repository:
         type: string
         required: false
-      chart:
+      namespace:
         type: string
-        required: true
+        required: false
+        default: ${{ github.event.repository.name }}
       release:
         type: string
-        required: true
+        required: false
+        default: ${{ github.event.repository.name }}
     secrets:
       kubeconfig:
         required: true
@@ -50,6 +52,5 @@ jobs:
           EOF
           ) > values.ci.yaml
           echo -e '${{ secrets.values }}' > values.add.yaml
-          cat values.add.yaml
       - name: Deploy
         run: helm upgrade -i -n ${{ inputs.namespace }} --create-namespace -f values.add.yaml -f values.ci.yaml ${{ inputs.release }} ${{ inputs.chart }}
