@@ -48,18 +48,44 @@ tasks:
     cmds:
       - go run main.go -migrate-down {{.CLI_ARGS}}
 
-  golangci-lint:
-    desc: Run 'golangci-lint' linter
+  vet:
+    desc: Run 'go vet'
     cmds:
+      - go vet ./...
+
+  staticcheck:
+    desc: Run staticcheck
+    cmds:
+      - if ! which -s staticcheck; then go install honnef.co/go/tools/cmd/staticcheck@latest; fi
+      - staticcheck ./...
+
+  golangci-lint:
+    desc: Run golangci-lint linter
+    cmds:
+      - if ! which -s golangci-lint; then brew install golangci-lint; fi
       - golangci-lint run ./...
 
-  test:
+  govulncheck:
+    desc: Run govulncheck
+    cmds:
+      - if ! which -s govulncheck; then go install golang.org/x/vuln/cmd/govulncheck@latest; fi
+      - govulncheck ./...
+
+  lint:
+    desc: Run all checkers and linters
+    cmds:
+      - task: vet
+      - task: staticcheck
+      - task: golangci-lint
+      - task: govulncheck
+
+  unit-test:
     desc: Run unit tests
     vars:
       GOTEST:
         sh: which gotest || echo go test
     cmds:
-      - '{{.GOTEST}} -v -mod=vendor -race {{default "./..." .CLI_ARGS}}'
+      - '{{.GOTEST}} -v -mod=vendor -race -failfast {{default "./..." .CLI_ARGS}}'
 
   func-test:
     desc: Run functional tests
