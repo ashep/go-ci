@@ -22,15 +22,61 @@ tasks:
       - buf generate
 
   build:
-    desc: Build the application
+    internal: true
+    vars:
+      APP_NAME:
+        sh: echo "${APP_NAME:-$(basename $(pwd))}"
+      APP_VERSION:
+        sh: echo "${APP_VERSION:-$(git rev-parse --abbrev-ref HEAD)}"
     env:
+      GOOS: "{{.OS}}"
+      GOARCH: "{{.ARCH}}"
       CGO_ENABLED: "0"
     cmds:
-      - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
-      - if [ -z "{{.APP_VERSION}}" ]; then echo "APP_VERSION var is not set"; exit 1; fi
       - mkdir -p build
       - go mod vendor
-      - go build -ldflags="-X 'github.com/ashep/go-apprun.appName={{.APP_NAME}}' -X 'github.com/ashep/go-apprun.appVer={{.APP_VERSION}}'" -o build/app main.go
+      - go build -tags osusergo,netgo -ldflags="-extldflags=-static -w -s -X 'github.com/ashep/go-apprun.appName={{.APP_NAME}}' -X 'github.com/ashep/go-apprun.appVer={{.APP_VERSION}}'" -o build/{{.APP_NAME}}-{{.OS}}-{{.ARCH}}{{.FEXT}} main.go
+
+  build-all:
+    desc: Build binaries for all platforms Linux/amd64
+    cmds:
+      - task: build-linux-amd64
+      - task: build-darwin-amd64
+      - task: build-darwin-arm64
+      - task: build-windows-amd64
+
+  build-linux-amd64:
+    desc: Build a binary for Linux/amd64
+    cmds:
+      - task: build
+        vars:
+          OS: linux
+          ARCH: amd64
+
+  build-darwin-amd64:
+    desc: Build a binary for MacOS/amd64
+    cmds:
+      - task: build
+        vars:
+          OS: darwin
+          ARCH: amd64
+
+  build-darwin-arm64:
+    desc: Build a binary for MacOS/arm64
+    cmds:
+      - task: build
+        vars:
+          OS: darwin
+          ARCH: arm64
+
+  build-windows-amd64:
+    desc: Build a binary for Windows/amd64
+    cmds:
+      - task: build
+        vars:
+          OS: windows
+          ARCH: amd64
+          FEXT: .exe
 
   migrate-up:
     desc: Apply DB migrations
