@@ -125,7 +125,7 @@ tasks:
       - task: golangci-lint
       - task: govulncheck
 
-  unit-test:
+  test:unit:
     desc: Run unit tests
     vars:
       GOTEST:
@@ -133,7 +133,7 @@ tasks:
     cmds:
       - '{{.GOTEST}} -v -mod=vendor -race -failfast {{default "./..." .CLI_ARGS}}'
 
-  func-test:
+  test:func:
     desc: Run functional tests
     vars:
       GOTEST:
@@ -143,14 +143,14 @@ tasks:
       - if [ -f docker-compose.tests.yaml ]; then docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml up --remove-orphans -d; fi
       - if [ -f docker-compose.tests.yaml ]; then docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml run --rm --remove-orphans tests go test -v -mod=vendor -tags=functest ./tests/...; fi
 
-  func-test:manual:
+  test:func:manual:
     desc: Attach to functional tests container
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
       - if [ -f docker-compose.tests.yaml ]; then docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml up --remove-orphans -d; fi
       - if [ -f docker-compose.tests.yaml ]; then docker compose -p {{.APP_NAME}}_tests -f docker-compose.tests.yaml run --rm -i tests sh; fi
 
-  func-test:clean:
+  test:func:clean:
     desc: Cleanup test environment
     cmds:
       - if [ -z "{{.APP_NAME}}" ]; then echo "APP_NAME var is not set"; exit 1; fi
