@@ -1,5 +1,16 @@
 version: "3"
 
+vars:
+  APP_NAME:
+    sh: echo "${APP_NAME:-$(basename $(pwd))}"
+  APP_VERSION:
+    sh: |
+      if [ ! -z "${APP_VERSION}" ]; then
+        echo ${APP_VERSION}
+      else
+        echo $(git describe --tags --always)
+      fi
+
 tasks:
   run:
     desc: Run the application
@@ -7,7 +18,7 @@ tasks:
       APP_CONFIG_PATH:
         sh: if [ -f "config.yaml" ]; then echo config.yaml; fi
     cmds:
-      - go run -race main.go {{.CLI_ARGS}}
+      - go run -race -tags osusergo,netgo -ldflags="-X 'github.com/ashep/go-apprun.appName={{.APP_NAME}}' -X 'github.com/ashep/go-apprun.appVer={{.APP_VERSION}}'" main.go {{.CLI_ARGS}}
 
   gen:
     desc: Generate go code
@@ -23,11 +34,6 @@ tasks:
 
   build:
     internal: true
-    vars:
-      APP_NAME:
-        sh: echo "${APP_NAME:-$(basename $(pwd))}"
-      APP_VERSION:
-        sh: echo "${APP_VERSION:-$(git rev-parse --abbrev-ref HEAD)}"
     env:
       GOOS: "{{.OS}}"
       GOARCH: "{{.ARCH}}"
@@ -35,7 +41,7 @@ tasks:
     cmds:
       - mkdir -p build
       - go mod vendor
-      - go build -tags osusergo,netgo -ldflags="-extldflags=-static -w -s -X 'github.com/ashep/go-apprun.appName={{.APP_NAME}}' -X 'github.com/ashep/go-apprun.appVer={{.APP_VERSION}}'" -o build/{{.APP_NAME}}-{{.OS}}-{{.ARCH}}{{.FEXT}} main.go
+      - go build -tags osusergo,netgo -ldflags="-extldflags=-static -w -s -X 'github.com/ashep/go-apprun.appName={{.APP_NAME}}' -X 'github.com/ashep/go-apprun.appVer={{.APP_VERSION}}'" -o build/{{.APP_NAME}}-{{.OS}}-{{.ARCH}}-{{.APP_VERSION}}{{.FEXT}} main.go
 
   build-all:
     desc: Build binaries for all platforms Linux/amd64
