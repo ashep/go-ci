@@ -36,7 +36,7 @@ jobs:
         uses: actions/setup-node@v4
       - name: Build app
         run: |
-          if [ ! -d node_modules ]; then npm install; fi
+          if [ ! -d node_modules ]; then npm ci; fi
           echo -e "${{ secrets.dotenv }}" > .env
           npm run build
       - name: Login to Docker registry
