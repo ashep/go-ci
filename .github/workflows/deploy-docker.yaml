@@ -14,7 +14,7 @@ on:
     secrets:
       ssh_host:
         required: true
-      ssh_username:
+      ssh_user:
         required: true
       ssh_key:
         required: true
