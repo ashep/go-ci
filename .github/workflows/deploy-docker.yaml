@@ -40,6 +40,15 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H -p ${{ inputs.ssh_port }} ${{ secrets.ssh_host }} > ~/.ssh/known_hosts
+          
+          (cat <<EOF
+          Host *
+            StrictHostKeyChecking no
+            HostKeyAlgorithms +ssh-rsa,ssh-dss
+            PubkeyAcceptedKeyTypes +ssh-rsa,ssh-dss
+          ${{ secrets.ssh_key }}
+          EOF
+          ) > .ssh/config
   
           (cat <<EOF
           ${{ secrets.ssh_key }}
