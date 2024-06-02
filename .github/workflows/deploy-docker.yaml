@@ -21,8 +21,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set env variables
-#        if: ${{ secrets.env }}
+        env: # https://stackoverflow.com/questions/72925899/github-actions-detect-if-secret-exists
+          dotenv: ${{ secrets.env }}
+        if: ${{ env.dotenv != '' }}
         run: |
+          if 
           (cat <<EOF
           ${{ secrets.env }}
           EOF
@@ -39,4 +42,4 @@ jobs:
           ssh-add ~/.ssh/id_rsa
 
           docker context create remote --docker "host=${{ secrets.docker_host }}"
-          docker --context remote compose -f ${{ inputs.compose_filename }}
+          docker --context remote compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
