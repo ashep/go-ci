@@ -32,14 +32,23 @@ jobs:
           ) > .env
       - name: Deploy
         run: |
-          mkdir -p .ssh
-          # eval $(ssh-agent -s)
+          mkdir -p ~/.ssh
+  
           (cat <<EOF
           ${{ secrets.private_key }}
           EOF
-          ) > .ssh/id_rsa
-          chmod 0600 .ssh/id_rsa
-          # ssh-add .ssh/id_rsa
+          ) > ~/.ssh/id_rsa
+          chmod 0600 ~/.ssh/id_rsa
 
-          docker context create remote --docker "host=${{ secrets.docker_host }},key=.ssh/id_rsa"
+          (cat <<EOF
+          Host *
+            StrictHostKeyChecking no
+          EOF
+          ) > ~/.ssh/config
+          chmod 0600 ~/.ssh/config
+          
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_rsa
+
+          docker context create remote --docker "host=${{ secrets.docker_host }}"
           docker --context remote compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
