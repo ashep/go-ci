@@ -11,6 +11,8 @@ on:
         required: true
       private_key:
         required: true
+      env:
+        required: false
 
 jobs:
   deploy:
@@ -18,6 +20,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set env variables
+        if: ${{ secrets.env != '' }}
+        run: |
+          (cat <<EOF
+          ${{ secrets.env }}
+          EOF
+          ) > .env
       - name: Deploy
         run: |
           mkdir -p ~/.ssh
