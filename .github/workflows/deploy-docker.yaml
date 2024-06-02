@@ -6,10 +6,17 @@ on:
         type: string
         required: false
         default: docker-compose.yaml
+      ssh_port:
+        type: number
+        required: false
+        default: 22
+
     secrets:
-      docker_host:
+      ssh_host:
         required: true
-      private_key:
+      ssh_username:
+        required: true
+      ssh_key:
         required: true
       env:
         required: false
@@ -25,30 +32,20 @@ jobs:
           dotenv: ${{ secrets.env }}
         if: ${{ env.dotenv != '' }}
         run: |
-          if 
           (cat <<EOF
           ${{ secrets.env }}
           EOF
           ) > .env
       - name: Deploy
         run: |
-          mkdir -p .ssh
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.ssh_host }} -p ${{ inputs.ssh_port }} > ~/.ssh/known_hosts
   
           (cat <<EOF
-          ${{ secrets.private_key }}
+          ${{ secrets.ssh_key }}
           EOF
-          ) > .ssh/id_rsa
-          chmod 0600 .ssh/id_rsa
-
-          (cat <<EOF
-          Host *
-            StrictHostKeyChecking no
-          EOF
-          ) > .ssh/config
-          chmod 0600 .ssh/config
-          
-          eval $(ssh-agent -s)
-          ssh-add .ssh/id_rsa
-
-          docker context create remote --docker "host=${{ secrets.docker_host }},key=.ssh/id_rsa"
+          ) > id_rsa
+          chmod 0600 id_rsa
+  
+          docker context create remote --docker "host=ssh://${{ secrets.ssh_user }}@${{ secrets.ssh_host }}:${{ inputs.ssh_port }},key=id_rsa"
           docker --context remote compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
