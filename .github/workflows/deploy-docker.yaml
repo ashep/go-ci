@@ -44,8 +44,8 @@ jobs:
           Host *
             StrictHostKeyChecking no
           EOF
-          ) > ~/.ssh/config
-          chmod 0600 ~/.ssh/config
+          ) > .ssh/config
+          chmod 0600 .ssh/config
           
           eval $(ssh-agent -s)
           ssh-add .ssh/id_rsa
