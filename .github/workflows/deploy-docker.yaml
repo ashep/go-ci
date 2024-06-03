@@ -38,6 +38,9 @@ jobs:
           ) > .env
       - name: Deploy
         run: |
+          ssh -V
+          ssh -Q sig
+          
           mkdir -p ~/.ssh
           ssh-keyscan -H -p ${{ inputs.ssh_port }} ${{ secrets.ssh_host }} > ~/.ssh/known_hosts
           
