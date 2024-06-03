@@ -2,6 +2,9 @@ name: deploy-docker
 on:
   workflow_call:
     inputs:
+      dotenv:
+        type: string
+        required: false
       compose_filename:
         type: string
         required: false
@@ -18,8 +21,6 @@ on:
         required: true
       ssh_key:
         required: true
-      dotenv:
-        required: false
 
 jobs:
   deploy:
@@ -27,13 +28,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set env variables
-        env: # https://stackoverflow.com/questions/72925899/github-actions-detect-if-secret-exists
-          dotenv: ${{ secrets.dotenv }}
-        if: ${{ env.dotenv != '' }}
+      - name: Add .env variables
+        if: ${{ inputs.dotenv }}
         run: |
           (cat <<EOF
-          ${{ secrets.dotenv }}
+          ${{ inputs.dotenv }}
           EOF
           ) >> .env
       - name: Deploy
