@@ -18,7 +18,7 @@ on:
         required: true
       ssh_key:
         required: true
-      env:
+      dotenv:
         required: false
 
 jobs:
@@ -29,24 +29,16 @@ jobs:
         uses: actions/checkout@v4
       - name: Set env variables
         env: # https://stackoverflow.com/questions/72925899/github-actions-detect-if-secret-exists
-          dotenv: ${{ secrets.env }}
+          dotenv: ${{ secrets.dotenv }}
         if: ${{ env.dotenv != '' }}
         run: |
           (cat <<EOF
-          ${{ secrets.env }}
+          ${{ secrets.dotenv }}
           EOF
-          ) > .env
+          ) >> .env
       - name: Deploy
         run: |
           mkdir -p ~/.ssh
-          
-          #          (cat <<EOF
-          #          Host *
-          #            StrictHostKeyChecking no
-          #            HostKeyAlgorithms +ssh-rsa,ssh-dss
-          #            PubkeyAcceptedKeyTypes +ssh-rsa,ssh-dss
-          #          EOF
-          #          ) > ~/.ssh/config
 
           (cat <<EOF
           ${{ secrets.ssh_key }}
