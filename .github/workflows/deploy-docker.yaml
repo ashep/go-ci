@@ -40,13 +40,12 @@ jobs:
         run: |
           ssh -V
           ssh -Q sig
-          
+
           mkdir -p ~/.ssh
           ssh-keyscan -H -p ${{ inputs.ssh_port }} ${{ secrets.ssh_host }} > ~/.ssh/known_hosts
           
           (cat <<EOF
           Host *
-            StrictHostKeyChecking no
             HostKeyAlgorithms +ssh-rsa,ssh-dss
             PubkeyAcceptedKeyTypes +ssh-rsa,ssh-dss
           EOF
@@ -58,5 +57,7 @@ jobs:
           ) > id_rsa
           chmod 0600 id_rsa
   
-          docker context create remote --docker "host=ssh://${{ secrets.ssh_user }}@${{ secrets.ssh_host }}:${{ inputs.ssh_port }},key=id_rsa"
-          docker --context remote compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
+          ssh -v -i id_rsa -p ${{ inputs.ssh_port }} ${{ secrets.ssh_user }}@${{ secrets.ssh_host }} ls
+  
+#          docker context create remote --docker "host=ssh://${{ secrets.ssh_user }}@${{ secrets.ssh_host }}:${{ inputs.ssh_port }},key=id_rsa"
+#          docker --context remote compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
