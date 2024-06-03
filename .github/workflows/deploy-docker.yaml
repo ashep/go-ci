@@ -39,10 +39,12 @@ jobs:
       - name: Deploy
         run: |
           mkdir -p ~/.ssh
+          eval $(ssh-agent -s)
           ssh-keyscan -H -p ${{ inputs.ssh_port }} ${{ secrets.ssh_host }} > ~/.ssh/known_hosts
           
           (cat <<EOF
           Host *
+            StrictHostKeyChecking no
             HostKeyAlgorithms +ssh-rsa,ssh-dss
             PubkeyAcceptedKeyTypes +ssh-rsa,ssh-dss
           EOF
@@ -53,6 +55,8 @@ jobs:
           EOF
           ) > ssh_id
           chmod 0600 ssh_id
+          
+          ssh-add ssh_id
   
           docker context create remote --docker "host=ssh://${{ secrets.ssh_user }}@${{ secrets.ssh_host }}:${{ inputs.ssh_port }},key=ssh_id"
           docker --context remote compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
