@@ -58,5 +58,7 @@ jobs:
           
           ssh-add ssh_id
   
-          docker context create remote --docker "host=ssh://${{ secrets.ssh_user }}@${{ secrets.ssh_host }}:${{ inputs.ssh_port }},key=ssh_id"
+          ssh -v -p ${{ inputs.ssh_port }} ${{ secrets.ssh_user }}@${{ secrets.ssh_host }} ls
+  
+          docker context create remote --docker "host=ssh://${{ secrets.ssh_user }}@${{ secrets.ssh_host }}:${{ inputs.ssh_port }}"
           docker --context remote compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
