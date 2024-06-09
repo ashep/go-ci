@@ -2,11 +2,16 @@ name: deploy-docker
 on:
   workflow_call:
     inputs:
+      app_name:
+        type: string
+        default: ${{ github.event.repository.name }}
+      app_version:
+        type: string
+        default: ""
       compose_filename:
         type: string
         required: false
         default: docker-compose.yaml
-
     secrets:
       ssh_host:
         required: true
@@ -31,7 +36,23 @@ jobs:
           ${{ secrets.dotenv }}
           EOF
           ) >> .env
+
+          APP_VERSION="${{ inputs.app_version }}"
+          if [ -z "$APP_VERSION" ]; then
+            if [ "${{ github.ref_type }}" == "tag" ]; then
+              APP_VERSION="${{ github.ref_name }}"
+            else
+              APP_VERSION=$(echo "${{ github.sha }}" | cut -c 1-7)
+            fi
+          fi
+
+          (cat <<EOF
+          APP_NAME=${{ inputs.app_name }}
+          APP_VERSION=${APP_VERSION}
+          EOF
+          ) >> .env
       - name: Deploy
+        shell: bash
         run: |
           mkdir -p ~/.ssh
 
@@ -40,10 +61,10 @@ jobs:
           EOF
           ) > ssh_id
           chmod 0600 ssh_id
-          
+
           eval $(ssh-agent -s)
           ssh-keyscan -H -p ${{ secrets.ssh_port }} ${{ secrets.ssh_host }} > ~/.ssh/known_hosts
           ssh-add ssh_id
-  
+
           docker context create remote --docker "host=ssh://${{ secrets.ssh_user }}@${{ secrets.ssh_host }}:${{ secrets.ssh_port }}"
           docker --context remote compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
