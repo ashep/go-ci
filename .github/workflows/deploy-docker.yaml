@@ -47,6 +47,7 @@ jobs:
           fi
 
           (cat <<EOF
+          APP_OWNER=${{ github.repository_owner }}
           APP_NAME=${{ inputs.app_name }}
           APP_VERSION=${APP_VERSION}
           EOF
