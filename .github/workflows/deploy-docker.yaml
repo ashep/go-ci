@@ -2,25 +2,22 @@ name: deploy-docker
 on:
   workflow_call:
     inputs:
-      dotenv:
-        type: string
-        required: false
       compose_filename:
         type: string
         required: false
         default: docker-compose.yaml
-      ssh_port:
-        type: string
-        required: false
-        default: "22"
 
     secrets:
       ssh_host:
+        required: true
+      ssh_port:
         required: true
       ssh_user:
         required: true
       ssh_key:
         required: true
+      dotenv:
+        required: false
 
 jobs:
   deploy:
@@ -29,10 +26,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Add .env variables
-        if: ${{ inputs.dotenv }}
         run: |
           (cat <<EOF
-          ${{ inputs.dotenv }}
+          ${{ secrets.dotenv }}
           EOF
           ) >> .env
       - name: Deploy
@@ -46,8 +42,8 @@ jobs:
           chmod 0600 ssh_id
           
           eval $(ssh-agent -s)
-          ssh-keyscan -H -p ${{ inputs.ssh_port }} ${{ secrets.ssh_host }} > ~/.ssh/known_hosts
+          ssh-keyscan -H -p ${{ secrets.ssh_port }} ${{ secrets.ssh_host }} > ~/.ssh/known_hosts
           ssh-add ssh_id
   
-          docker context create remote --docker "host=ssh://${{ secrets.ssh_user }}@${{ secrets.ssh_host }}:${{ inputs.ssh_port }}"
+          docker context create remote --docker "host=ssh://${{ secrets.ssh_user }}@${{ secrets.ssh_host }}:${{ secrets.ssh_port }}"
           docker --context remote compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
