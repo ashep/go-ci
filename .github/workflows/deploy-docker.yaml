@@ -55,9 +55,6 @@ jobs:
       - name: Deploy
         shell: bash
         run: |
-          cat .env
-          cat ${{ inputs.compose_filename }}
-
           mkdir -p ~/.ssh
 
           (cat <<EOF
