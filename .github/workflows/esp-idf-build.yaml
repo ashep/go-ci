@@ -2,12 +2,9 @@ name: build
 on:
   workflow_call:
     inputs:
-      app_name:
+      path:
         type: string
-        default: ${{ github.event.repository.name }}
-      app_version:
-        type: string
-        default: ""
+        default: "."
 
 jobs:
   build:
@@ -19,4 +16,4 @@ jobs:
           submodules: true
       - name: Build
         run: |
-          docker run --rm -v $PWD:/project -w /project espressif/idf:latest idf.py build
+          docker run --rm -v $PWD/${{inputs.path}}:/project -w /project espressif/idf:latest idf.py build
