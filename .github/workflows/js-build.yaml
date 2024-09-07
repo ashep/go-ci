@@ -34,7 +34,7 @@ jobs:
         with:
           repository: ashep/ci
           ref: v1
-          path: .ci
+          path: ${{inputs.workdir}}/.ci
       - name: Setup NodeJS
         uses: actions/setup-node@v4
       - name: Build app
