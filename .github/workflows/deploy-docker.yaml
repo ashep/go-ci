@@ -38,7 +38,7 @@ jobs:
           (cat <<EOF
           ${{ secrets.dotenv }}
           EOF
-          ) >> .env
+          ) >> ${{ inputs.workdir }}/.env
 
           APP_VERSION="${{ inputs.app_version }}"
           if [ -z "$APP_VERSION" ]; then
