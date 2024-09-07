@@ -2,6 +2,9 @@ name: deploy-docker
 on:
   workflow_call:
     inputs:
+      workdir:
+        type: string
+        default: "."
       app_name:
         type: string
         default: ${{ github.event.repository.name }}
@@ -51,7 +54,7 @@ jobs:
           APP_NAME=${{ inputs.app_name }}
           APP_VERSION=${APP_VERSION}
           EOF
-          ) >> .env
+          ) >> ${{ inputs.workdir }}/.env
       - name: Deploy
         shell: bash
         run: |
@@ -67,5 +70,6 @@ jobs:
           ssh-keyscan -H -p ${{ secrets.ssh_port }} ${{ secrets.ssh_host }} > ~/.ssh/known_hosts
           ssh-add ssh_id
 
+          cd ${{ inputs.workdir }}
           docker context create remote --docker "host=ssh://${{ secrets.ssh_user }}@${{ secrets.ssh_host }}:${{ secrets.ssh_port }}"
           docker --context remote compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate

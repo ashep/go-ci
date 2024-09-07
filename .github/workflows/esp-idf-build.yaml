@@ -2,7 +2,7 @@ name: build
 on:
   workflow_call:
     inputs:
-      path:
+      workdir:
         type: string
         default: "."
 
@@ -16,4 +16,4 @@ jobs:
           submodules: true
       - name: Build
         run: |
-          docker run --rm -v $PWD/${{inputs.path}}:/project -w /project espressif/idf:latest idf.py build
+          docker run --rm -v $PWD/${{inputs.workdir}}:/project -w /project espressif/idf:latest idf.py build

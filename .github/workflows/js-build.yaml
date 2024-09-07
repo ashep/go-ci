@@ -2,7 +2,7 @@ name: build-react-app
 on:
   workflow_call:
     inputs:
-      path:
+      workdir:
         type: string
         default: "."
       app_name:
@@ -39,7 +39,7 @@ jobs:
         uses: actions/setup-node@v4
       - name: Build app
         run: |
-          cd ${{inputs.path}}
+          cd ${{inputs.workdir}}
           if [ ! -d node_modules ]; then npm ci; fi
           echo -e "${{ secrets.dotenv }}" > .env
           npm run build
@@ -52,7 +52,8 @@ jobs:
       - name: Build and push Docker image
         uses: ashep/ci/actions/build-image@v1
         with:
+          workdir: ${{inputs.workdir}}
           app_name: ${{ inputs.app_name }}
-          dockerfile: "${{inputs.path}}/${{ inputs.dockerfile }}"
+          dockerfile: ${{ inputs.dockerfile }}
           registry_host: ${{ inputs.registry_host }}
           registry_user: ${{ inputs.registry_user }}
