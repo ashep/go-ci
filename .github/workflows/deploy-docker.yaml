@@ -15,6 +15,9 @@ on:
         type: string
         required: false
         default: docker-compose.yaml
+      pre_script:
+        type: string
+        required: false
     secrets:
       ssh_host:
         required: true
@@ -55,6 +58,11 @@ jobs:
           APP_VERSION=${APP_VERSION}
           EOF
           ) >> ${{ inputs.workdir }}/.env
+      - name: Run pre-script
+        if: ${{ inputs.pre_script != '' }}
+        shell: bash
+        run: |
+          ${{ inputs.pre_script }}
       - name: Deploy
         shell: bash
         run: |
