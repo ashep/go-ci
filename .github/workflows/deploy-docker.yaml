@@ -58,10 +58,8 @@ jobs:
           EOF
           ) >> ${{ inputs.workdir }}/.env
       - name: Run pre-script
-        if: ${{ secrets.pre_script != '' }}
         shell: bash
-        run: |
-          ${{ secrets.pre_script }}
+        run: ${{ secrets.pre_script }}
       - name: Deploy
         shell: bash
         run: |
