@@ -15,9 +15,6 @@ on:
         type: string
         required: false
         default: docker-compose.yaml
-      pre_script:
-        type: string
-        required: false
     secrets:
       ssh_host:
         required: true
@@ -28,6 +25,8 @@ on:
       ssh_key:
         required: true
       dotenv:
+        required: false
+      pre_script:
         required: false
 
 jobs:
@@ -59,10 +58,10 @@ jobs:
           EOF
           ) >> ${{ inputs.workdir }}/.env
       - name: Run pre-script
-        if: ${{ inputs.pre_script != '' }}
+        if: ${{ secrets.pre_script != '' }}
         shell: bash
         run: |
-          ${{ inputs.pre_script }}
+          ${{ secrets.pre_script }}
       - name: Deploy
         shell: bash
         run: |
