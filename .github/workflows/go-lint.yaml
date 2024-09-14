@@ -79,6 +79,10 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ inputs.go_version }}
+      - uses: ashep/ci/actions/go-private@v1
+        with:
+          go_private: ${{ inputs.go_private }}
+          private_key: ${{ secrets.private_key }}
       - uses: ashep/ci/actions/setup-golangci-lint@v1
         with:
           version: ${{ inputs.golangcilint_version }}
