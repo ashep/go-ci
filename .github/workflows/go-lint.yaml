@@ -21,7 +21,7 @@ on:
         default: true
       golangcilint_version:
         type: string
-        default: 1.57.2
+        default: 1.61.0
     secrets:
       private_key:
         required: false
