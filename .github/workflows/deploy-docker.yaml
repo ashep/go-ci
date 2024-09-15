@@ -30,9 +30,6 @@ on:
       registry_user:
         type: string
         required: false
-      dotenv:
-        type: string
-        required: false
       pre_script:
         type: string
         required: false
@@ -42,6 +39,10 @@ on:
         required: true
       registry_password:
         required: false
+      dotenv:
+        type: string
+        required: false
+
 
 jobs:
   deploy:
