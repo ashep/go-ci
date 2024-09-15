@@ -15,6 +15,12 @@ on:
         type: string
         required: false
         default: docker-compose.yaml
+      registry_host:
+        type: string
+        required: false
+      registry_user:
+        type: string
+        required: false
     secrets:
       ssh_host:
         required: true
@@ -24,6 +30,8 @@ on:
         required: true
       ssh_key:
         required: true
+      registry_password:
+        required: false
       dotenv:
         required: false
       pre_script:
