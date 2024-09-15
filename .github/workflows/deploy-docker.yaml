@@ -96,9 +96,10 @@ jobs:
           ssh-add ssh_id
           
           cd ${{ inputs.workdir }}
-          ssh -p ${{ inputs.ssh_port }} ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} docker login -u '${{ inputs.registry_user }}' -p '${{ secrets.registry_password }}' ${{ inputs.registry_host }}
           
           # docker context create remote --docker "host=ssh://${{ secrets.ssh_user }}@${{ secrets.ssh_host }}:${{ secrets.ssh_port }}"
           # docker --context remote compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
           # docker compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
+          ssh -p ${{ inputs.ssh_port }} ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} docker login -u '${{ inputs.registry_user }}' -p '${{ secrets.registry_password }}' ${{ inputs.registry_host }}
           DOCKER_HOST="ssh://${{ inputs.ssh_user }}@${{ inputs.ssh_host }}:${{ inputs.ssh_port }}" docker compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
+          ssh -p ${{ inputs.ssh_port }} ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} docker logout ${{ inputs.registry_host }}
