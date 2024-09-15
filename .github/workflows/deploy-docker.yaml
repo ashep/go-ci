@@ -98,6 +98,7 @@ jobs:
           cd ${{ inputs.workdir }}
           
           ssh -p ${{ inputs.ssh_port }} ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} docker login -u '${{ inputs.registry_user }}' -p '${{ secrets.registry_password }}' ${{ inputs.registry_host }}
+          docker login -u '${{ inputs.registry_user }}' -p '${{ secrets.registry_password }}' ${{ inputs.registry_host }}
           
           #DOCKER_HOST="ssh://${{ inputs.ssh_user }}@${{ inputs.ssh_host }}:${{ inputs.ssh_port }}" docker compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
           docker context create remote --docker "host=ssh://${{ inputs.ssh_user }}@${{ inputs.ssh_host }}:${{ inputs.ssh_port }}"
