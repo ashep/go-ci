@@ -92,7 +92,7 @@ jobs:
           chmod 0600 ssh_id
 
           eval $(ssh-agent -s)
-          ssh-keyscan -H -p ${{ secrets.ssh_port }} ${{ secrets.ssh_host }} > ~/.ssh/known_hosts
+          ssh-keyscan -H -p ${{ inputs.ssh_port }} ${{ inputs.ssh_host }} > ~/.ssh/known_hosts
           ssh-add ssh_id
           
           cd ${{ inputs.workdir }}
