@@ -40,9 +40,7 @@ on:
       registry_password:
         required: false
       dotenv:
-        type: string
         required: false
-
 
 jobs:
   deploy:
@@ -53,7 +51,7 @@ jobs:
       - name: Add .env variables
         run: |
           (cat <<EOF
-          ${{ inputs.dotenv }}
+          ${{ secrets.dotenv }}
           EOF
           ) >> ${{ inputs.workdir }}/.env
 
