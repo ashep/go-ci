@@ -57,6 +57,13 @@ jobs:
           APP_VERSION=${APP_VERSION}
           EOF
           ) >> ${{ inputs.workdir }}/.env
+      - name: Docker login
+        uses: docker/login-action@v3
+        if: ${{ inputs.registry_host != '' }}
+        with:
+          registry: ${{ inputs.registry_host }}
+          username: ${{ inputs.registry_user }}
+          password: ${{ secrets.registry_password }}
       - name: Run pre-script
         shell: bash
         run: ${{ secrets.pre_script }}
