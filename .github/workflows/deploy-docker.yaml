@@ -85,7 +85,10 @@ jobs:
           EOF
           ) >> ${{ inputs.workdir }}/.env
           
-          [ "${{ inputs.debug }}" == "true" ] && cat ${{ inputs.workdir }}/.env
+          if [ "${{ inputs.debug }}" == "true" ]; then
+            echo ".env contents:"
+            cat ${{ inputs.workdir }}/.env
+          fi
       - name: Docker login
         uses: docker/login-action@v3
         if: ${{ inputs.registry_host != '' }}
