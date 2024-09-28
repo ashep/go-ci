@@ -120,4 +120,4 @@ jobs:
           cd ${{ inputs.workdir }}
                     
           docker context create remote --docker "host=ssh://${{ inputs.ssh_user }}@${{ inputs.ssh_host }}:${{ inputs.ssh_port }}"
-          docker --context remote compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate
+          docker --context remote compose -f ${{ inputs.compose_filename }} up -d --always-recreate-deps --force-recreate --remove-orphans
