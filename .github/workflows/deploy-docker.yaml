@@ -42,6 +42,8 @@ on:
         required: true
       registry_password:
         required: false
+      pre_script:
+        required: false
       dotenv:
         required: false
 
