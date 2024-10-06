@@ -26,10 +26,11 @@ jobs:
       - name: Build
         run: |
           docker run --rm -v $PWD/${{inputs.workdir}}:/project -w /project espressif/idf:${{inputs.idf_version}} idf.py build
-          cp "${{inputs.workdir}}/build/${{inputs.app_name}}.bin" "${{inputs.workdir}}/build/${{inputs.app_name}}-${{inputs.app_target}}.bin"
+          mkdir -p ${{inputs.workdir}}/${{inputs.app_name}}-${{inputs.app_target}}
+          cp "${{inputs.workdir}}/build/${{inputs.app_name}}.bin" "${{inputs.workdir}}/${{inputs.app_name}}-${{inputs.app_target}}/${{inputs.app_name}}-${{inputs.app_target}}.bin"
       - name: Save binary artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{inputs.app_name}}-${{inputs.app_target}}.bin
-          path: "${{inputs.workdir}}/build/${{inputs.app_name}}-${{inputs.app_target}}.bin"
+          path: "${{inputs.workdir}}/${{inputs.app_name}}-${{inputs.app_target}}/${{inputs.app_name}}-${{inputs.app_target}}.bin"
           overwrite: true
