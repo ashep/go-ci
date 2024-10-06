@@ -24,7 +24,7 @@ jobs:
             APP_VERSION="${{ github.ref_name }}"
           fi
         
-          APP_TARGET=$(sed -nr 's/CONFIG_IDF_TARGET="(.+)"/\1/p' sdkconfig)
+          APP_TARGET=$(sed -nr 's/CONFIG_IDF_TARGET="(.+)"/\1/p' ${{inputs.workdir}}/sdkconfig)
           if [ -z "APP_TARGET" ]; then
             echo "Unknown target"
             exit 1
