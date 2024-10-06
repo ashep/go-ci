@@ -25,7 +25,6 @@ jobs:
           submodules: true
       - name: Build
         run: |
-          docker run --rm -v $PWD/${{inputs.workdir}}:/project -w /project espressif/idf:${{inputs.idf_version}} idf.py set-target ${{inputs.app_target}}
           docker run --rm -v $PWD/${{inputs.workdir}}:/project -w /project espressif/idf:${{inputs.idf_version}} idf.py build
           cp "${{inputs.workdir}}/build/${{inputs.app_name}}.bin" "${{inputs.workdir}}/build/${{inputs.app_name}}-${{inputs.app_target}}.bin"
       - name: Save binary artifact
