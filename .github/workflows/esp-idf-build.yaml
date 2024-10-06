@@ -2,9 +2,12 @@ name: build
 on:
   workflow_call:
     inputs:
+      app_name:
+        type: string
+        required: true
       workdir:
         type: string
-        default: "."
+        default: .
 
 jobs:
   build:
@@ -16,4 +19,21 @@ jobs:
           submodules: true
       - name: Build
         run: |
-          docker run --rm -v $PWD/${{inputs.workdir}}:/project -w /project espressif/idf:latest idf.py build
+          APP_VERSION=$(echo "${{ github.sha }}" | cut -c 1-7)
+          if [ "${{ github.ref_type }}" == "tag" ]; then
+            APP_VERSION="${{ github.ref_name }}"
+          fi
+        
+          APP_TARGET=$(sed -nr 's/CONFIG_IDF_TARGET="(.+)"/\1/p' sdkconfig)
+          if [ -z "APP_TARGET" ]; then
+            echo "Unknown target"
+            exit 1
+          fi
+          
+          echo "${APP_VERSION}" ${{inputs.workdir}}/version.txt
+          docker run --rm -v $PWD/${{inputs.workdir}}:/project -w /project espressif/idf:5.3.1 idf.py build
+      - name: Save binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{inputs.app_name}}.bin
+          path: "${{inputs.workdir}}/build/${{inputs.app_name}}.bin"
