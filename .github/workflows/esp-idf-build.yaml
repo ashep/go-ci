@@ -5,6 +5,12 @@ on:
       app_name:
         type: string
         required: true
+      app_target:
+        type: string
+        default: esp32s3
+      idf_version:
+        type: string
+        default: release-v5.3
       workdir:
         type: string
         default: .
@@ -19,21 +25,12 @@ jobs:
           submodules: true
       - name: Build
         run: |
-          APP_VERSION=$(echo "${{ github.sha }}" | cut -c 1-7)
-          if [ "${{ github.ref_type }}" == "tag" ]; then
-            APP_VERSION="${{ github.ref_name }}"
-          fi
-        
-          APP_TARGET=$(sed -nr 's/CONFIG_IDF_TARGET="(.+)"/\1/p' ${{inputs.workdir}}/sdkconfig)
-          if [ -z "APP_TARGET" ]; then
-            echo "Unknown target"
-            exit 1
-          fi
-          
-          echo "${APP_VERSION}" ${{inputs.workdir}}/version.txt
-          docker run --rm -v $PWD/${{inputs.workdir}}:/project -w /project espressif/idf:release-v5.3 idf.py build
+          docker run --rm -v $PWD/${{inputs.workdir}}:/project -w /project espressif/idf:${{inputs.idf_version}} idf.py set-target ${{inputs.app_target}}
+          docker run --rm -v $PWD/${{inputs.workdir}}:/project -w /project espressif/idf:${{inputs.idf_version}} idf.py build
+          cp "${{inputs.workdir}}/build/${{inputs.app_name}}.bin" "${{inputs.workdir}}/build/${{inputs.app_name}}-${{inputs.app_target}}.bin"
       - name: Save binary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{inputs.app_name}}.bin
-          path: "${{inputs.workdir}}/build/${{inputs.app_name}}.bin"
+          name: ${{inputs.app_name}}-${{inputs.app_target}}.bin
+          path: "${{inputs.workdir}}/build/${{inputs.app_name}}-${{inputs.app_target}}.bin"
+          overwrite: true
