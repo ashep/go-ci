@@ -28,7 +28,7 @@ jobs:
           cd ${{inputs.workdir}}
           
           cp sdkconfig.${{inputs.app_target}} sdkconfig
-          docker run --rm -v $PWD/${{inputs.workdir}}:/project -w /project espressif/idf:${{inputs.idf_version}} idf.py build
+          docker run --rm -v $PWD:/project -w /project espressif/idf:${{inputs.idf_version}} idf.py build
           
           APP_VER=$(cat version.txt | head -n 1)
           APP_VER_ALPHA=$(echo $APP_VER | awk -F "." '{print $4}')
