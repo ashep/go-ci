@@ -40,9 +40,8 @@ jobs:
           mkdir -p ./__release
           cp ./build/${{inputs.app_name}}.bin ./__release/app-${APP_VER}-${{inputs.app_target}}.bin
           cp ./build/bootloader/bootloader.bin ./__release/bootloader-${APP_VER}-${{inputs.app_target}}.bin
-      - name: Upload release artifacts
-        uses: actions/upload-artifact@v4
+      - uses: ncipollo/release-action@v1
+        if: ${{github.ref_type == 'tag'}}
         with:
-          name: release
-          path: ${{inputs.workdir}}/__release/
-          overwrite: true
+          allowUpdates: true
+          artifacts: "${{inputs.app_name}}/__release/*"
