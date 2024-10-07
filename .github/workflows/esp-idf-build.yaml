@@ -30,13 +30,13 @@ jobs:
           
           APP_VER=$(cat ${{inputs.workdir}}/version.txt | head -n 1)
           APP_VER_ALPHA=$(echo $APP_VER | awk -F "." '{print $4}')
-          if [ "APP_VER_ALPHA" != "0" ]; then
+          if [ "${APP_VER_ALPHA}" != "0" ]; then
               APP_VER="${APP_VER}-alpha${APP_VER_ALPHA}"
           fi
           
           mkdir -p ${{inputs.workdir}}/__release
           cp ${{inputs.workdir}}/build/${{inputs.app_name}}.bin ${{inputs.workdir}}/__release/app-${APP_VER}-${{inputs.app_target}}.bin
-          cp ${{inputs.workdir}}/build/bootloader.bin ${{inputs.workdir}}/__release/bootloader-${APP_VER}-${{inputs.app_target}}.bin
+          cp ${{inputs.workdir}}/build/bootloader/bootloader.bin ${{inputs.workdir}}/__release/bootloader-${APP_VER}-${{inputs.app_target}}.bin
       - name: Upload release artifacts
         uses: actions/upload-artifact@v4
         with:
