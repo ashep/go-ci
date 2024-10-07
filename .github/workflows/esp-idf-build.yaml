@@ -44,4 +44,5 @@ jobs:
         if: ${{github.ref_type == 'tag'}}
         with:
           allowUpdates: true
-          artifacts: "${{inputs.app_name}}/__release/*"
+          artifactErrorsFailBuild: true
+          artifacts: "${{inputs.workdir}}/__release/*"
