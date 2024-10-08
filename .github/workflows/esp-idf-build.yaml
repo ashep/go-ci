@@ -23,23 +23,30 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+      - name: Get version info
+        run: |
+          VER=$(cat ${{inputs.workdir}}/version.txt | head -n 1)
+          VER_ALPHA=$(echo $VER | awk -F "." '{print $4}')
+          VER=$(echo $VER | awk -F "." '{print $1"."$2"."$3}')
+          if [ "${VER_ALPHA}" != "0" ]; then
+              VER="${VER}-alpha${VER_ALPHA}"
+          fi
+          echo "APP_VERSION=${VER}" >> ${GITHUB_ENV}
       - name: Build
         run: |
           cd ${{inputs.workdir}}
-          
           cp sdkconfig.${{inputs.app_target}} sdkconfig
           docker run --rm -v $PWD:/project -w /project espressif/idf:${{inputs.idf_version}} idf.py build
-          
-          APP_VER=$(cat version.txt | head -n 1)
-          APP_VER_ALPHA=$(echo $APP_VER | awk -F "." '{print $4}')
-          APP_VER=$(echo $APP_VER | awk -F "." '{print $1"."$2"."$3}')
-          if [ "${APP_VER_ALPHA}" != "0" ]; then
-              APP_VER="${APP_VER}-alpha${APP_VER_ALPHA}"
-          fi
-          
           mkdir -p ./__release
-          cp ./build/${{inputs.app_name}}.bin ./__release/app-${APP_VER}-${{inputs.app_target}}.bin
-          cp ./build/bootloader/bootloader.bin ./__release/bootloader-${APP_VER}-${{inputs.app_target}}.bin
+          cp ./build/${{inputs.app_name}}.bin ./__release/app-${APP_VERSION}-${{inputs.app_target}}.bin
+          cp ./build/bootloader/bootloader.bin ./__release/bootloader-${APP_VERSION}-${{inputs.app_target}}.bin
+      - name: Check version info
+        if: ${{github.ref_type == 'tag'}}
+        run: |
+          if [ "${{github.ref_name}}" != "${APP_VERSION}" ]; then
+            echo "Version mismatch"
+            exit 1
+          fi
       - uses: ncipollo/release-action@v1
         if: ${{github.ref_type == 'tag'}}
         with:
