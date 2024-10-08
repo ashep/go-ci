@@ -38,8 +38,8 @@ jobs:
           cp sdkconfig.${{inputs.app_target}} sdkconfig
           docker run --rm -v $PWD:/project -w /project espressif/idf:${{inputs.idf_version}} idf.py build
           mkdir -p ./__release
-          cp ./build/${{inputs.app_name}}.bin ./__release/app-${APP_VERSION}-${{inputs.app_target}}.bin
-          cp ./build/bootloader/bootloader.bin ./__release/bootloader-${APP_VERSION}-${{inputs.app_target}}.bin
+          cp ./build/${{inputs.app_name}}.bin ./__release/${{inputs.app_name}}-${APP_VERSION}-${{inputs.app_target}}.bin
+          cp ./build/bootloader/bootloader.bin ./__release/${{inputs.app_name}}-bootloader-${APP_VERSION}-${{inputs.app_target}}.bin
       - name: Check version info
         if: ${{github.ref_type == 'tag'}}
         run: |
