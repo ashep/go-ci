@@ -56,7 +56,7 @@ jobs:
           artifactErrorsFailBuild: true
           artifacts: ${{inputs.workdir}}/__release/*
           generateReleaseNotes: true
-          makeLatest: ${{ !contains('-alpha', github.ref_name) }}
-          prerelease: ${{ contains('-alpha', github.ref_name) }}
+          makeLatest: ${{ !contains(github.ref_name, '-alpha') }}
+          prerelease: ${{ contains(github.ref_name, '-alpha') }}
           removeArtifacts: true
           replacesArtifacts: true
