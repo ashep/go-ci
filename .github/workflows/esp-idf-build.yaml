@@ -54,4 +54,9 @@ jobs:
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
-          artifacts: "${{inputs.workdir}}/__release/*"
+          artifacts: ${{inputs.workdir}}/__release/*
+          generateReleaseNotes: true
+          makeLatest: true
+          prerelease: ${{contains('-alpha', github.ref_name)}}
+          removeArtifacts: true
+          replacesArtifacts: true
