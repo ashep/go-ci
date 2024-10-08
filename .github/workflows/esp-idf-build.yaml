@@ -7,7 +7,7 @@ on:
         required: true
       app_target:
         type: string
-        default: esp32s3
+        required: true
       idf_version:
         type: string
         default: release-v5.3
@@ -45,6 +45,8 @@ jobs:
         run: |
           if [ "${{github.ref_name}}" != "${APP_VERSION}" ]; then
             echo "Version mismatch"
+            echo "tag: ${{github.ref_name}}"
+            echo "version.txt: ${APP_VERSION}"
             exit 1
           fi
       - uses: ncipollo/release-action@v1
