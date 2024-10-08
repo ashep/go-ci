@@ -41,22 +41,22 @@ jobs:
           cp ./build/${{inputs.app_name}}.bin ./__release/${{inputs.app_name}}-${APP_VERSION}-${{inputs.app_target}}.bin
           cp ./build/bootloader/bootloader.bin ./__release/${{inputs.app_name}}-bootloader-${APP_VERSION}-${{inputs.app_target}}.bin
       - name: Check version info
-        if: ${{github.ref_type == 'tag'}}
+        if: ${{ github.ref_type == 'tag' }}
         run: |
-          if [ "${{github.ref_name}}" != "${APP_VERSION}" ]; then
+          if [ "${{ github.ref_name }}" != "${APP_VERSION}" ]; then
             echo "Version mismatch"
             echo "tag: ${{github.ref_name}}"
             echo "version.txt: ${APP_VERSION}"
             exit 1
           fi
       - uses: ncipollo/release-action@v1
-        if: ${{github.ref_type == 'tag'}}
+        if: ${{ github.ref_type == 'tag' }}
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
           artifacts: ${{inputs.workdir}}/__release/*
           generateReleaseNotes: true
-          makeLatest: true
-          prerelease: ${{contains('-alpha', github.ref_name)}}
+          makeLatest: ${{ !contains('-alpha', github.ref_name) }}
+          prerelease: ${{ contains('-alpha', github.ref_name) }}
           removeArtifacts: true
           replacesArtifacts: true
