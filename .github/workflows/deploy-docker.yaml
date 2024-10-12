@@ -56,8 +56,6 @@ jobs:
     steps:
       - name: Mask sensitive inputs
         uses: levibostian/action-hide-sensitive-inputs@v1
-        with:
-          exclude_inputs: debug,workdir,app_name,app_version,compose_filename,pre_script,dotenv
       - name: Checkout
         uses: actions/checkout@v4
       - name: Add .env variables
