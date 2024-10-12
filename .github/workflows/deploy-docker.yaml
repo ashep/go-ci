@@ -56,6 +56,8 @@ jobs:
     steps:
       - name: Hide sensitive inputs
         run: |
+          echo $GITHUB_EVENT_PATH 
+          cat $GITHUB_EVENT_PATH
           SSH_HOST=$(jq -r '.inputs.ssh_host' $GITHUB_EVENT_PATH)
           SSH_PORT=$(jq -r '.inputs.ssh_port' $GITHUB_EVENT_PATH)
           SSH_USER=$(jq -r '.inputs.ssh_user' $GITHUB_EVENT_PATH)
