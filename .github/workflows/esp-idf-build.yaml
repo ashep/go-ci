@@ -37,7 +37,9 @@ jobs:
           echo "APP_VERSION=${VER}" >> ${GITHUB_ENV}
       - name: Run pre-script
         shell: bash
-        run: ${{ inputs.pre_script }}
+        run: |
+          cd ${{inputs.workdir}}
+          ${{ inputs.pre_script }}
       - name: Build
         run: |
           cd ${{inputs.workdir}}
