@@ -2,6 +2,9 @@ name: build
 on:
   workflow_call:
     inputs:
+      workdir:
+        type: string
+        default: .
       app_name:
         type: string
         required: true
@@ -11,9 +14,9 @@ on:
       idf_version:
         type: string
         default: release-v5.3
-      workdir:
+      pre_script:
         type: string
-        default: .
+        required: false
 
 jobs:
   build:
@@ -32,6 +35,9 @@ jobs:
               VER="${VER}-alpha${VER_ALPHA}"
           fi
           echo "APP_VERSION=${VER}" >> ${GITHUB_ENV}
+      - name: Run pre-script
+        shell: bash
+        run: ${{ inputs.pre_script }}
       - name: Build
         run: |
           cd ${{inputs.workdir}}
