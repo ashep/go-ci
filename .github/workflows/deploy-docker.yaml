@@ -20,7 +20,7 @@ on:
       compose_filename:
         type: string
         required: false
-        default: .ci/base/docker-compose.yaml
+        default: docker-compose.yaml
       ssh_host:
         type: string
         required: true
@@ -123,6 +123,11 @@ jobs:
         run: |
           mkdir -p ~/.ssh
 
+          COMPOSE_FILENAME="${{ inputs.compose_filename }}"
+          if [ -f "${COMPOSE_FILENAME}" ]; then
+            COMPOSE_FILENAME=".ci/base/docker-compose.yaml"
+          fi
+
           (cat <<EOF
           ${{ secrets.ssh_key }}
           EOF
@@ -136,4 +141,4 @@ jobs:
           cd ${{ inputs.workdir }}
                     
           docker context create remote --docker "host=ssh://${{ inputs.ssh_user }}@${{ inputs.ssh_host }}:${{ inputs.ssh_port }}"
-          docker --context remote compose -f ${{ inputs.compose_filename }} up -d --build --always-recreate-deps --force-recreate --remove-orphans
+          docker --context remote compose -f ${COMPOSE_FILENAME} up -d --build --always-recreate-deps --force-recreate --remove-orphans
