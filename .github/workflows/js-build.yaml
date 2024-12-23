@@ -45,7 +45,7 @@ jobs:
           cd ${{inputs.workdir}}
           if [ ! -d node_modules ]; then npm ci; fi
           echo -e "${{ secrets.dotenv }}" > .env
-          ${{ build_cmd }}
+          ${{ inputs.build_cmd }}
       - name: Login to Docker registry
         uses: docker/login-action@v3
         with:
