@@ -93,6 +93,7 @@ jobs:
 
           (cat <<EOF
           REGISTRY_HOST=${{ inputs.registry_host }}
+          DOCKER_IMAGE=${DOCKER_IMAGE}
           APP_OWNER=${{ github.repository_owner }}
           APP_NAME=${{ inputs.app_name }}
           APP_VERSION=${APP_VERSION}
