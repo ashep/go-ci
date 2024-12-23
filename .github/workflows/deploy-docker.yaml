@@ -86,6 +86,11 @@ jobs:
             fi
           fi
 
+          DOCKER_IMAGE="${{ github.repository_owner }}/${{ inputs.app_name }}:${APP_VERSION}"
+          if [ -n "${{ inputs.registry_host }}" ]; then
+            DOCKER_IMAGE="${{ inputs.registry_host }}/${DOCKER_IMAGE}"
+          fi
+
           (cat <<EOF
           REGISTRY_HOST=${{ inputs.registry_host }}
           APP_OWNER=${{ github.repository_owner }}
