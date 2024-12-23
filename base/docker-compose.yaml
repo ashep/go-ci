@@ -1,0 +1,8 @@
+name: ${APP_NAME}
+services:
+  app:
+    image: ${APP_OWNER}/${APP_NAME}:latest
+    restart: unless-stopped
+    pull_policy: always
+    ports:
+      - 127.0.0.1:${APP_EXT_PORT}:80
