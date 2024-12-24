@@ -124,7 +124,7 @@ jobs:
           mkdir -p ~/.ssh
 
           COMPOSE_FILENAME="${{ inputs.compose_filename }}"
-          if [ -f "${COMPOSE_FILENAME}" ]; then
+          if [ ! -f "${COMPOSE_FILENAME}" ]; then
             COMPOSE_FILENAME=".ci/base/docker-compose.yaml"
           fi
 
