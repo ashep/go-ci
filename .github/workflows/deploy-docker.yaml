@@ -14,6 +14,12 @@ on:
       app_version:
         type: string
         default: ""
+      app_addr:
+        type: string
+        default: 127.0.0.1
+      app_int_port:
+        type: string
+        default: 9000
       app_ext_port:
         type: string
         default: 9000
@@ -97,6 +103,8 @@ jobs:
           APP_OWNER=${{ github.repository_owner }}
           APP_NAME=${{ inputs.app_name }}
           APP_VERSION=${APP_VERSION}
+          APP_ADDR=${{ inputs.app_addr }}
+          APP_INT_PORT=${{ inputs.app_int_port }}
           APP_EXT_PORT=${{ inputs.app_ext_port }}
           EOF
           ) >> ${{ inputs.workdir }}/.env
