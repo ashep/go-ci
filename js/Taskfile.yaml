@@ -1,0 +1,9 @@
+version: "3"
+
+tasks:
+  build:
+    desc: Build the application
+    cmds:
+      - if [ ! -d node_modules ]; then npm install; fi
+      - if [ ! -z "${DOTENV}" ]; then echo -e "${DOTENV}" > .env; fi
+      - npm run build
